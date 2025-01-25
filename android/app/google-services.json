@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1024839263211",
+    "project_id": "gearshareapp-efbf4",
+    "storage_bucket": "gearshareapp-efbf4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024839263211:android:da09fb2269ffb131636fae",
+        "android_client_info": {
+          "package_name": "com.example.gear_share_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024839263211-dq8ej4uqo6tmrfe3die5v3ek434o07l6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gear_share_project",
+            "certificate_hash": "c9cc7c2c1e0174cc56a85267e76de6b8e7ad2360"
+          }
+        },
+        {
+          "client_id": "1024839263211-c5unu1q79jcjbepfui67fho5t994k266.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxa9JqiAcsxOmWh0u5YutttseBGnKfk8k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024839263211-c5unu1q79jcjbepfui67fho5t994k266.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1024839263211-pvgejpi3mf4hbqbth5akdn8m9t0katd0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gearShareProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

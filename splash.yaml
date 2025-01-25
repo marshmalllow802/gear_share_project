@@ -1,0 +1,14 @@
+flutter_native_splash:
+  color: "#FFFFFF"
+  color_dark: "272727"
+  image: C:\dev-folder\test\projekt_dyplomowy\gear_share_project\lib\assets\logos\logo_gearshare.png
+  image_dark: C:\dev-folder\test\projekt_dyplomowy\gear_share_project\lib\assets\logos\logo_gearshare.png
+
+  android_12:
+    color: "#FFFFFF"
+    color_dark: "272727"
+    image: lib\assets\logos\logo_gearshare.png
+    image_dark: lib\assets\logos\logo_gearshare.png
+  
+
+  web: false
