@@ -1,4 +1,10 @@
 class KValidator {
+  static String? validateEmptyText(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'To pole jest wymagane.';
+    }
+  }
+
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email jest wymagany.';
