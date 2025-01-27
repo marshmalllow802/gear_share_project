@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:gear_share_project/common/widgets/loaders/loaders.dart';
-import 'package:gear_share_project/utils/constants/image_strings.dart';
-import 'package:gear_share_project/utils/popups/full_screen_loader.dart';
+import 'package:gear_share_project/data/repositories/authentication/authentication_repository.dart';
+import 'package:gear_share_project/data/repositories/user/user_repository.dart';
+import 'package:gear_share_project/features/authentication/screens/signup/verify_email.dart';
+import 'package:gear_share_project/features/personalization/models/user_model.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
@@ -19,16 +21,18 @@ class SignupController extends GetxController {
   GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
 
   /// Rejestracja
-  Future<void> signup() async {
+  void signup() async {
     try {
       // Zacznij wczytywanie
-      KFullScreenLoader.openLoadingDialog(
-          'Analizujemy przeslana informacje...', KImages.lightLogo);
+      // KFullScreenLoader.openLoadingDialog(
+      //'Analizujemy przeslana informacje...', KImages.lightLogo);
 
       // Sprawdz polaczenie internetowe(pozniej)
 
       // Walidacja formatki rejestracyjnej
       if (!signupFormKey.currentState!.validate()) {
+        // Usun loader
+        // KFullScreenLoader.stopLoading();
         return;
       }
 
@@ -38,19 +42,44 @@ class SignupController extends GetxController {
             title: 'Zaakceptuj polityke prywatnosci',
             message:
                 'Aby założyć konto musisz zaakceptować Politykę prywatności oraz Warunki użytkowania');
+        return;
       }
 
       // Zarejestruj uzytkownika do firebase authentication i zapisz dane uzytkownika w firebasie
-
+      final userCredential = await AuthenticationRepository.instance
+          .registerWithEmailAndPassword(
+              email.text.trim(), password.text.trim());
       // Zapisz zautoryzowane dane uzytkownika w firebase firestore
+      final newUser = UserModel(
+        id: userCredential.user!.uid,
+        firstName: firstName.text.trim(),
+        lastName: lastName.text.trim(),
+        username: userName.text.trim(),
+        email: email.text.trim(),
+        phoneNumber: phoneNumber.text.trim(),
+        profilePicture: '',
+      );
+
+      final userRepository = Get.put(UserRepository());
+      await userRepository.saveUserRecord(newUser);
+
+      // Usun loader
+      //KFullScreenLoader.stopLoading();
 
       // Pokaz wiadomosc sukcesu
+
+      KLoaders.successSnackBar(
+          title: 'Gratulacje!',
+          message:
+              'Twoje konto zostało stworzone. Zweryfikuj swój email aby kontynuować');
+
+      Get.to(() => const VerifyEmailScreen());
     } catch (e) {
+      // Usun loader
+      // KFullScreenLoader.stopLoading();
+
       // Pokaz wygenerowany error
       KLoaders.errorSnackBar(title: 'Doszlo do pomylki', message: e.toString());
-    } finally {
-      // Usun loader
-      KFullScreenLoader.stopLoading();
     }
   }
 }
