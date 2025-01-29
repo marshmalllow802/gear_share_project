@@ -32,7 +32,10 @@ class FavoritesScreen extends StatelessWidget {
             children: [
               KGridLayout(
                   itemCount: 4,
-                  itemBuilder: (_, index) => const KProductCardVertical())
+                  itemBuilder: (_, index) {
+                    debugPrint(index.toString());
+                    return const KProductCardVertical();
+                  })
             ],
           ),
         ),
