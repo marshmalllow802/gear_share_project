@@ -110,7 +110,7 @@ class KLoginForm extends StatelessWidget {
                   onPressed: () async {
                     final userCredential = await FirebaseAuth.instance
                         .signInWithEmailAndPassword(
-                            email: "maks1@maks.home", password: "password");
+                            email: "test6@test6.com", password: "Test6^");
                     debugPrint('Zalogowano: $userCredential');
                   },
                   child: const Text('Testuj logowanie'),
