@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
-import 'package:get/get.dart';
 import 'package:gear_share_project/utils/theme/theme.dart';
+import 'package:get/get.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -14,9 +14,9 @@ class App extends StatelessWidget {
       darkTheme: KAppTheme.darkTheme,
 
       ///Wyświetlanie loadera póki Authentication repository decyduje aby wyświetlić odpowiedni ekran
-      home: const Scaffold(
+      home: Scaffold(
         backgroundColor: KColors.primary,
-        body: Center(
+        body: const Center(
           child: CircularProgressIndicator(color: Colors.white),
         ),
       ),

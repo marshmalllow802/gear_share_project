@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:gear_share_project/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
+
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
 import '../../../../common/widgets/layouts/grid_layout.dart';
 import 'widgets/home_appbar.dart';
@@ -77,6 +79,20 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () {
+            FirebaseAuth.instance.signOut();
+            debugPrint("signOut");
+          }), /*
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () async {
+            var userCredential = await FirebaseAuth.instance
+                .signInWithEmailAndPassword(
+                email: "maks1@maks.home", password: "password");
+            debugPrint("userCredential: $userCredential");
+          }),*/
     );
   }
 }

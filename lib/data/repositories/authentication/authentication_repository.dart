@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:gear_share_project/features/authentication/screens/login/login.dart';
+import 'package:gear_share_project/navigation_menu.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
@@ -20,17 +21,36 @@ class AuthenticationRepository extends GetxController {
 
   /// Weryfikacja czy logowanie jest pierwsze
   screenRedirect() async {
-    deviceStorage.writeIfNull('isFirstTime', true);
-    deviceStorage.read('isFirstTime') != true ? Get.offAll(() => const LoginScreen()) : Get.offAll(const onBoardingScreen());
+    final user = _auth.currentUser;
+
+    if (user != null) {
+      // if (user.emailVerified) {
+      Get.offAll(() => const NavigationMenu());
+      //}
+      //else {
+      //Get.offAll(() => VerifyEmailScreen(email: _auth.currentUser?.email));
+      //}
+    } else {
+      deviceStorage.writeIfNull('isFirstTime', true);
+
+      deviceStorage.read('isFirstTime') != true
+          ? Get.offAll(() => const LoginScreen())
+          : Get.offAll(const onBoardingScreen());
+    }
   }
+
+  /// Logowanie
+  Future<UserCredential> loginWithEmailAndPassword(
+      String email, String password) async {
+    return await _auth.signInWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  /// ---- Rejestracja
 
   Future<UserCredential> registerWithEmailAndPassword(
       String email, String password) async {
-    try {
       return await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      throw 'Coś poszło nie tak. Spróbuj ponownie';
-    }
   }
 }
