@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/success_screen/success_screen.dart';
@@ -67,8 +68,11 @@ class VerifyEmailScreen extends StatelessWidget {
                             image: KImages.staticSuccessIllustration,
                             title: KTexts.yourAccountCreatedTitle,
                             subTitle: KTexts.yourAccountCreatedSubTitle,
-                            onPressed: () =>
-                                Get.offAll(() => const LoginScreen()),
+                            onPressed: () => Get.offAll(() {
+                              debugPrint("Get.to LoginScreen");
+                              FirebaseAuth.instance.signOut();
+                              return LoginScreen();
+                            }),
                           ),
                         ),
                     child: const Text(KTexts.kContinue)),

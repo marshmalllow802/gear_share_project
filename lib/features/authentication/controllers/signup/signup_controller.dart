@@ -48,6 +48,8 @@ class SignupController extends GetxController {
     final userCredential = await AuthenticationRepository.instance
         .registerWithEmailAndPassword(email.text.trim(), password.text.trim());
     // Zapisz zautoryzowane dane uzytkownika w firebase firestore
+
+    debugPrint("userCredential: $userCredential");
     final newUser = UserModel(
       id: userCredential.user!.uid,
       firstName: firstName.text.trim(),
