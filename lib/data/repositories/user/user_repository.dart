@@ -21,7 +21,7 @@ class UserRepository extends GetxController {
   }
 
   /// Funkcja do pobrania danych o użytkowniku po jego id
-  Future<UserModel> saveUserDetails() async {
+  Future<UserModel> fetchUserDetails() async {
     try {
       final documentSnapshot = await _db
           .collection("Users")
@@ -62,7 +62,7 @@ class UserRepository extends GetxController {
   }
 
   /// Usunięcie danych użytkownika z Firestore
-  Future<void> uremoveUserRecord(String userId) async {
+  Future<void> removeUserRecord(String userId) async {
     try {
       await _db.collection("Users").doc(userId).delete();
     } on FirebaseException catch (e) {

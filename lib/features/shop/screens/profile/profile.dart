@@ -7,11 +7,14 @@ import 'package:gear_share_project/utils/constants/image_strings.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:iconsax/iconsax.dart';
 
+import '../../../personalization/controllers/user_controller.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = UserController.instance;
     return Scaffold(
       appBar: const KAppBar(
         showBackArror: true,
@@ -49,10 +52,12 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: KSizes.spaceBtwItems),
 
               KProfileMenu(
-                  title: 'Imię', value: 'Karina Vakhonina', onPressed: () {}),
+                  title: 'Imię',
+                  value: controller.user.value.fullName,
+                  onPressed: () {}),
               KProfileMenu(
                   title: 'Nazwa użytkowinika',
-                  value: 'marshmallow',
+                  value: controller.user.value.username,
                   onPressed: () {}),
 
               const SizedBox(height: KSizes.spaceBtwItems),
@@ -64,14 +69,16 @@ class ProfileScreen extends StatelessWidget {
 
               KProfileMenu(
                   title: 'User ID',
-                  value: '45678',
+                  value: controller.user.value.id,
                   icon: Iconsax.copy,
                   onPressed: () {}),
               KProfileMenu(
-                  title: 'E-mail', value: 'student@dsw.com', onPressed: () {}),
+                  title: 'E-mail',
+                  value: controller.user.value.email,
+                  onPressed: () {}),
               KProfileMenu(
                   title: 'Numer telefonu',
-                  value: '321 654 987',
+                  value: controller.user.value.phoneNumber,
                   onPressed: () {}),
               KProfileMenu(
                   title: 'Data urodzenia',
