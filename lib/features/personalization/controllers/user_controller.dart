@@ -1,6 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:gear_share_project/data/repositories/authentication/authentication_repository.dart';
 import 'package:gear_share_project/data/repositories/user/user_repository.dart';
+import 'package:gear_share_project/features/authentication/screens/login/login.dart';
 import 'package:gear_share_project/features/personalization/models/user_model.dart';
+import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:get/get.dart';
 
 class UserController extends GetxController {
@@ -38,6 +42,36 @@ class UserController extends GetxController {
       );
 
       await userRepository.saveUserRecord(user);
+    }
+  }
+
+  void deleteAccountWarningPopup() {
+    Get.defaultDialog(
+        contentPadding: const EdgeInsets.all(KSizes.md),
+        title: 'Delete Account',
+        middleText:
+            'Czy jesteś pewny, że chcesz usunąć konto? To jest nieodwracalne i wszystkie twoje dane zostaną usunięte.',
+        confirm: ElevatedButton(
+          onPressed: () async => deleteUserAccount(),
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              side: const BorderSide(color: Colors.red)),
+          child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: KSizes.lg),
+              child: Text('Usuń')),
+        ),
+        cancel: OutlinedButton(
+            onPressed: () => Navigator.of(Get.overlayContext!).pop(),
+            child: const Text('Anuluj')));
+  }
+
+  void deleteUserAccount() async {
+    final auth = AuthenticationRepository.instance;
+    final provider = auth.authUser!.providerData.map((e) => e.providerId).first;
+
+    if (provider.isNotEmpty) {
+      AuthenticationRepository.instance.deleteAccount;
+      Get.offAll(() => const LoginScreen());
     }
   }
 }
