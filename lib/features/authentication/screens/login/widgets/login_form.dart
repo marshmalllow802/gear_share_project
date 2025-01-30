@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/features/authentication/controllers/login/login_controller.dart';
 import 'package:gear_share_project/features/authentication/screens/password_configuration/forget_password.dart';
@@ -104,7 +103,7 @@ class KLoginForm extends StatelessWidget {
                   child: const Text(KTexts.createAccount),
                 )),
 
-            SizedBox(
+            /*SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
@@ -114,7 +113,7 @@ class KLoginForm extends StatelessWidget {
                     debugPrint('Zalogowano: $userCredential');
                   },
                   child: const Text('Testuj logowanie'),
-                ))
+                ))*/
           ],
         ),
       ),

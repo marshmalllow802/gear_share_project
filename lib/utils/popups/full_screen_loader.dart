@@ -18,14 +18,13 @@ class KFullScreenLoader {
               : KColors.white,
           width: double.infinity,
           height: double.infinity,
-          child: Column(
-            children: [
-              const SizedBox(height: 250),
-              KAnimationLoaderWidget(text: text, animation: animation),
-            ],
-          ),
+          child:
+              /*const SizedBox(height: 250),*/
+              Center(
+                  child:
+                      KAnimationLoaderWidget(text: text, animation: animation)),
         ),
-      ),
+        ),
     );
   }
 
