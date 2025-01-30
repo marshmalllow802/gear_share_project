@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/appbar/appbar.dart';
+import 'package:gear_share_project/common/widgets/effects/shimmer.dart';
 import 'package:gear_share_project/common/widgets/images/circular_image.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/features/shop/screens/profile/widgets/profile_menu.dart';
 import 'package:gear_share_project/utils/constants/image_strings.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../personalization/controllers/user_controller.dart';
@@ -32,13 +34,22 @@ class ProfileScreen extends StatelessWidget {
                 width: double.infinity,
                 child: Column(
                   children: [
-                    const KCircularImage(
-                      image: KImages.userImage,
-                      width: 80,
-                      height: 80,
-                    ),
+                    Obx(() {
+                      final networkImage = controller.user.value.profilePicture;
+                      final image = networkImage.isNotEmpty
+                          ? networkImage
+                          : KImages.userImage;
+                      return controller.imageUploading.value
+                          ? const KShimmerEffect(
+                              width: 80, height: 80, radius: 80)
+                          : KCircularImage(
+                              image: image,
+                              width: 80,
+                              height: 80,
+                              isNetworkImage: networkImage.isNotEmpty);
+                    }),
                     TextButton(
-                        onPressed: () {},
+                        onPressed: () => controller.uploadUserProfilePicture(),
                         child: const Text('Zmień zdjęcie profilowe')),
                   ],
                 ),
