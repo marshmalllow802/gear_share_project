@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gear_share_project/features/shop/models/product_model.dart';
 
 import '../../../../common/widgets/appbar/appbar.dart';
 import '../../../../common/widgets/custom_shapes/containers/search_container.dart';
@@ -43,7 +44,9 @@ class KCategoryScreen extends StatelessWidget {
                 itemCount: 4,
                 // Zmieniamy na odpowiednią liczbę produktów dla danej kategorii
                 itemBuilder: (_, index) {
-                  return const KProductCardVertical(); // Jeśli masz produkty w tej kategorii, tutaj je pokażesz
+                  return KProductCardVertical(
+                    product: ProductModel.empty(), // Временное решение
+                  ); // Jeśli masz produkty w tej kategorii, tutaj je pokażesz
                 },
               ),
             ],

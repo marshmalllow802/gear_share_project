@@ -1,8 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:gear_share_project/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
+import 'package:gear_share_project/features/shop/models/product_model.dart';
+import 'package:gear_share_project/features/shop/screens/add_screen/add_screen.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
@@ -15,6 +17,23 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final db = FirebaseFirestore.instance;
+
+    /// Otrzymaj wszystkie kategorie
+    Future<List<ProductModel>> getAllProducts() async {
+      try {
+        final snapshot = await db.collection('Products').get();
+        final list = snapshot.docs
+            .map((document) => ProductModel.fromSnapshot(
+                document as DocumentSnapshot<Map<String, dynamic>>))
+            .toList();
+        return list;
+      } on FirebaseException catch (e) {
+        debugPrint("FirebaseFirestore error: $e");
+        throw 'Coś poszło nie tak. Spróbuj ponownie później.';
+      }
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -70,9 +89,24 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(
                     height: KSizes.spaceBtwItems,
                   ),
-                  KGridLayout(
-                      itemCount: 4,
-                      itemBuilder: (_, index) => const KProductCardVertical()),
+                  FutureBuilder<List<ProductModel>>(
+                    future: getAllProducts(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      final products = snapshot.data ?? [];
+                      return KGridLayout(
+                        itemCount: products.length,
+                        itemBuilder: (_, index) => KProductCardVertical(
+                          product: products[index],
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
             )
@@ -80,19 +114,14 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () {
-            FirebaseAuth.instance.signOut();
-            debugPrint("signOut");
-          }), /*
-      floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () async {
-            var userCredential = await FirebaseAuth.instance
-                .signInWithEmailAndPassword(
-                email: "maks1@maks.home", password: "password");
-            debugPrint("userCredential: $userCredential");
-          }),*/
+        child: const Icon(Icons.add),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddScreen()),
+          );
+        },
+      ),
     );
   }
 }

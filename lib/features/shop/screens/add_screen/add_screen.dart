@@ -1,7 +1,14 @@
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/appbar/appbar.dart';
+import 'package:gear_share_project/features/shop/models/product_model.dart';
+import 'package:gear_share_project/features/shop/screens/home/home.dart';
 import 'package:gear_share_project/utils/constants/enums.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddScreen extends StatefulWidget {
@@ -12,6 +19,47 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
+/*  Future<String> uploadImage(String path, XFile image) async {
+    try {
+      // Logujemy wybraną ścieżkę do zdjęcia
+      print("Przesyłanie zdjęcia do Firebase Storage: ${image.path}");
+
+      // Tworzymy referencję do miejsca w Firebase Storage
+      final ref = FirebaseStorage.instance.ref(path).child(image.name);
+      final file = File(image.path);
+
+      // Sprawdzamy, czy plik istnieje w systemie
+      if (await file.exists()) {
+        print("Plik istnieje, przesyłanie...");
+      } else {
+        print("Plik nie istnieje! Ścieżka: ${image.path}");
+        return ''; // Jeśli plik nie istnieje, zwróć pusty string
+      }
+
+      // Przesyłanie zdjęcia do Firebase Storage
+      final uploadTask = ref.putFile(file);
+      uploadTask.snapshotEvents.listen((event) {
+        print(
+            "Przesyłanie: ${event.bytesTransferred} / ${event.totalBytes} bytes");
+      });
+
+      // Czekamy, aż operacja zakończy się sukcesem
+      await uploadTask.whenComplete(() async {
+        print("Zdjęcie zostało przesłane do Firebase Storage.");
+      });
+
+      // Uzyskiwanie URL po zakończeniu przesyłania
+      final url = await ref.getDownloadURL();
+      print("URL zdjęcia z Firebase Storage: $url");
+
+      return url; // Zwracamy URL zdjęcia
+    } on FirebaseException catch (e) {
+      print("Błąd podczas przesyłania zdjęcia: $e");
+      throw 'Coś poszło nie tak z przesyłaniem zdjęcia. Spróbuj ponownie.';
+    }
+  }*/
+
+  final _db = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
@@ -29,7 +77,7 @@ class _AddScreenState extends State<AddScreen> {
     });
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       /// Przygotowanie danych do wysłania
       final title = _titleController.text;
@@ -40,21 +88,58 @@ class _AddScreenState extends State<AddScreen> {
       final images = _images;
 
       /// Sprawdzenie, czy wszystkie wymagane dane są wypełnione
-      if (title.isEmpty || price == null || category == null || images == null || images.isEmpty) {
+      if (title.isEmpty ||
+          price == null ||
+          category == null ||
+          images == null ||
+          images.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Proszę wypełnić wszystkie wymagane pola.')),
+          const SnackBar(
+              content: Text('Proszę wypełnić wszystkie wymagane pola.')),
         );
         return;
       }
+      final uid = FirebaseAuth.instance.currentUser?.uid;
+      String author;
+      if (uid!.isNotEmpty) {
+        author = uid.toString();
+      } else {
+        author = "";
+      }
+      List<String> imagesUrls = [];
+      for (var image in images) {
+        final ref =
+            FirebaseStorage.instance.ref("Images/Products").child(image.name);
+        final file = File(image.path);
+        // Przesyłanie zdjęcia do Firebase Storage
+        final uploadTask = ref.putFile(file);
+        uploadTask.snapshotEvents.listen((event) {
+          debugPrint(
+              "Przesyłanie: ${event.bytesTransferred} / ${event.totalBytes} bytes");
+        });
 
-      // TODO: Wyślij dane do backendu
-      print('Tytuł: $title');
-      print('Opis: $description');
-      print('Cena: $price');
-      print('Kategoria: $category');
-      print('Okres wypożyczenia: $rentalPeriod');
-      print('Liczba zdjęć: ${images.length}');
+        final url = await ref.getDownloadURL();
+        imagesUrls.add(url);
+        await uploadTask.whenComplete(() async {
+          if (images.length == imagesUrls.length) {
+            final newProduct = ProductModel(
+                id: "",
+                title: title,
+                description: description,
+                price: price,
+                category: category.toString(),
+                rentalPeriod: rentalPeriod.toString(),
+                images: imagesUrls,
+                author: author,
+                status: "Dostępny");
+            _db.collection("Products").add(newProduct.toJson()).then(
+                (documentSnapshot) =>
+                    print("Added Data with ID: ${documentSnapshot.id}"));
+          }
+        });
+      }
     }
+    Get.to(() => HomeScreen());
   }
 
   @override
@@ -157,7 +242,8 @@ class _AddScreenState extends State<AddScreen> {
               // Wybór okresu wypożyczenia
               DropdownButtonFormField<RentalPeriod>(
                 value: _selectedRentalPeriod,
-                decoration: const InputDecoration(labelText: 'Okres wypożyczenia'),
+                decoration:
+                    const InputDecoration(labelText: 'Okres wypożyczenia'),
                 items: RentalPeriod.values.map((period) {
                   return DropdownMenuItem(
                     value: period,

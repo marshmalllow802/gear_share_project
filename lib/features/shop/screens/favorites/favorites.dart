@@ -3,6 +3,7 @@ import 'package:gear_share_project/common/widgets/appbar/appbar.dart';
 import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/common/widgets/layouts/grid_layout.dart';
 import 'package:gear_share_project/common/widgets/products/product_cards/product_card_vertical.dart';
+import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/home/home.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:get/get.dart';
@@ -34,7 +35,9 @@ class FavoritesScreen extends StatelessWidget {
                   itemCount: 4,
                   itemBuilder: (_, index) {
                     debugPrint(index.toString());
-                    return const KProductCardVertical();
+                    return KProductCardVertical(
+                      product: ProductModel.empty(), // Временное решение
+                    );
                   })
             ],
           ),

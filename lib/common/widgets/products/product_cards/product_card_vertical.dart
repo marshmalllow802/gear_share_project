@@ -1,30 +1,29 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gear_share_project/common/styles/shadow_styles.dart';
 import 'package:gear_share_project/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/common/widgets/images/rounded_image.dart';
-import 'package:gear_share_project/common/widgets/products/product_cards/product_location/product_location.dart';
 import 'package:gear_share_project/common/widgets/products/product_price/product_price.dart';
-import 'package:gear_share_project/common/widgets/texts/product_title_text.dart';
+import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/product/product_detail.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
-import 'package:gear_share_project/utils/constants/image_strings.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
-import '../../availability/product_availability.dart';
-
 class KProductCardVertical extends StatelessWidget {
-  const KProductCardVertical({super.key});
+  final ProductModel product;
+
+  const KProductCardVertical({
+    super.key,
+    required this.product,
+  });
 
   @override
   Widget build(BuildContext context) {
     final dark = KHelperFunctions.isDarkMode(context);
-
+    debugPrint('product.images[0]: ${product.images[0]}');
     return GestureDetector(
       onTap: () => Get.to(() => const ProductDetail()),
       child: Container(
@@ -42,13 +41,16 @@ class KProductCardVertical extends StatelessWidget {
               height: 180,
               padding: const EdgeInsets.all(KSizes.sm),
               backgroundColor: dark ? KColors.dark : KColors.light,
-              child: const Stack(
+              child: Stack(
                 children: [
                   ///Zdjęcie
-                  KRoundedImage(imageUrl: KImages.productImage5),
+                  KRoundedImage(
+                    imageUrl: product.images[0],
+                    isNetworkImage: true,
+                  ),
 
                   ///Ulubione
-                  Positioned(
+                  const Positioned(
                       bottom: 0,
                       right: 0,
                       child: KCircularIcon(
@@ -62,28 +64,55 @@ class KProductCardVertical extends StatelessWidget {
             const SizedBox(height: KSizes.spaceBtwItems / 2),
 
             /// Opis
-            const Padding(
-              padding: EdgeInsets.only(left: KSizes.sm),
+            Padding(
+              padding: const EdgeInsets.all(KSizes.sm),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ///Nazwa produktu
-                  KProductTitleText(
-                    title: 'Wiertarka, Magnum GX6',
-                    smallSize: true,
+                  Text(
+                    product.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
-                  SizedBox(height: KSizes.spaceBtwItems / 2),
-
-                  ///status dostępności
-                  KProductAvailability(isAvailable: false),
-
-                  SizedBox(height: KSizes.spaceBtwItems / 2),
-
-                  ///lokalizacja
-                  KProductLocation(location: 'Wrocław'),
-
-                  ///cena za dzień
-                  SizedBox(height: KSizes.spaceBtwItems / 2),
+                  const SizedBox(height: KSizes.xs),
+                  Text(
+                    product.category,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                  const SizedBox(height: KSizes.xs),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '${product.price.toString()} zł',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(KSizes.xs),
+                        decoration: BoxDecoration(
+                          color: product.status == 'available'
+                              ? Colors.green.withOpacity(0.1)
+                              : Colors.red.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(KSizes.xs),
+                        ),
+                        child: Text(
+                          product.status,
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: product.status == 'available'
+                                        ? Colors.green
+                                        : Colors.red,
+                                  ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),

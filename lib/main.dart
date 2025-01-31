@@ -29,6 +29,7 @@ Future<void> main() async {
       print('User is currently signed out!');
     } else {
       print('User is signed in!');
+      debugPrint('User: ${FirebaseAuth.instance.currentUser?.uid}');
     }
   });
   Get.put(KFirebaseStorageService());

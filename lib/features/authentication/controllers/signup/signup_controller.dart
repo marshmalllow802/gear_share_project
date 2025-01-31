@@ -4,10 +4,9 @@ import 'package:gear_share_project/data/repositories/authentication/authenticati
 import 'package:gear_share_project/data/repositories/user/user_repository.dart';
 import 'package:gear_share_project/features/authentication/screens/signup/verify_email.dart';
 import 'package:gear_share_project/features/personalization/models/user_model.dart';
+import 'package:gear_share_project/utils/constants/image_strings.dart';
+import 'package:gear_share_project/utils/popups/full_screen_loader.dart';
 import 'package:get/get.dart';
-
-import '../../../../utils/constants/image_strings.dart';
-import '../../../../utils/popups/full_screen_loader.dart';
 
 class SignupController extends GetxController {
   static SignupController get instance => Get.find();
