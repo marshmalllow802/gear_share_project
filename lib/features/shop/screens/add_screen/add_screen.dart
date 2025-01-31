@@ -78,8 +78,9 @@ class _AddScreenState extends State<AddScreen> {
   }
 
   Future<void> _submitForm() async {
+    if (!mounted) return;
     if (_formKey.currentState!.validate()) {
-      /// Przygotowanie danych do wysłania
+      /// Подготовка данных
       final title = _titleController.text;
       final description = _descriptionController.text;
       final price = double.tryParse(_priceController.text);
@@ -87,7 +88,7 @@ class _AddScreenState extends State<AddScreen> {
       final rentalPeriod = _selectedRentalPeriod;
       final images = _images;
 
-      /// Sprawdzenie, czy wszystkie wymagane dane są wypełnione
+      /// Валидация
       if (title.isEmpty ||
           price == null ||
           category == null ||
@@ -99,47 +100,55 @@ class _AddScreenState extends State<AddScreen> {
         );
         return;
       }
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      String author;
-      if (uid!.isNotEmpty) {
-        author = uid.toString();
-      } else {
-        author = "";
-      }
-      List<String> imagesUrls = [];
-      for (var image in images) {
-        final ref =
-            FirebaseStorage.instance.ref("Images/Products").child(image.name);
-        final file = File(image.path);
-        // Przesyłanie zdjęcia do Firebase Storage
-        final uploadTask = ref.putFile(file);
-        uploadTask.snapshotEvents.listen((event) {
-          debugPrint(
-              "Przesyłanie: ${event.bytesTransferred} / ${event.totalBytes} bytes");
-        });
 
-        final url = await ref.getDownloadURL();
-        imagesUrls.add(url);
-        await uploadTask.whenComplete(() async {
-          if (images.length == imagesUrls.length) {
-            final newProduct = ProductModel(
-                id: "",
-                title: title,
-                description: description,
-                price: price,
-                category: category.toString(),
-                rentalPeriod: rentalPeriod.toString(),
-                images: imagesUrls,
-                author: author,
-                status: "Dostępny");
-            _db.collection("Products").add(newProduct.toJson()).then(
-                (documentSnapshot) =>
-                    print("Added Data with ID: ${documentSnapshot.id}"));
-          }
-        });
+      try {
+        // Получаем ID пользователя
+        final uid = FirebaseAuth.instance.currentUser?.uid;
+        final author = uid ?? "";
+
+        // Загружаем все изображения и получаем их URL
+        List<String> imagesUrls = [];
+        for (var image in images) {
+          final ref =
+              FirebaseStorage.instance.ref("Images/Products").child(image.name);
+          final file = File(image.path);
+
+          // Загружаем файл
+          await ref.putFile(file);
+
+          // Получаем URL
+          final url = await ref.getDownloadURL();
+          imagesUrls.add(url);
+        }
+
+        // После загрузки всех изображений создаем продукт
+        final newProduct = ProductModel(
+            id: "",
+            title: title,
+            description: description,
+            price: price,
+            category: category.toString(),
+            rentalPeriod: rentalPeriod.toString(),
+            images: imagesUrls,
+            author: author,
+            status: "Dostępny");
+
+        // Сохраняем продукт в Firestore
+        await _db.collection("Products").add(newProduct.toJson());
+
+        // Переходим на главный экран
+        if (!mounted) return;
+        Get.to(() => const HomeScreen());
+      } catch (e) {
+        debugPrint("Error: $e");
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Wystąpił błąd podczas dodawania produktu.'),
+          ),
+        );
       }
     }
-    Get.to(() => HomeScreen());
   }
 
   @override
