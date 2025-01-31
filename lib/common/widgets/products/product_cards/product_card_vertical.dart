@@ -7,6 +7,7 @@ import 'package:gear_share_project/common/widgets/products/product_price/product
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/product/product_detail.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
+import 'package:gear_share_project/utils/constants/enums.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
@@ -78,7 +79,9 @@ class KProductCardVertical extends StatelessWidget {
                   ),
                   const SizedBox(height: KSizes.xs),
                   Text(
-                    product.category,
+                    PostCategory.values
+                        .firstWhere((e) => e.toString() == product.category)
+                        .name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.labelMedium,
