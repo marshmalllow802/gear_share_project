@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 
 class KRoundedImage extends StatelessWidget {
+  static const defaultImageUrl =
+      "https://png.pngtree.com/png-clipart/20190925/original/pngtree-no-image-vector-illustration-isolated-png-image_4979075.jpg";
+
   const KRoundedImage({
     super.key,
     this.border,
@@ -10,7 +13,7 @@ class KRoundedImage extends StatelessWidget {
     this.width = 172,
     this.height = 158,
     this.applyImageRadius = true,
-    required this.imageUrl,
+    this.imageUrl,
     this.fit = BoxFit.contain,
     this.backgroundColor,
     this.isNetworkImage = false,
@@ -18,7 +21,7 @@ class KRoundedImage extends StatelessWidget {
   });
 
   final double? width, height;
-  final String imageUrl;
+  final String? imageUrl;
   final bool applyImageRadius;
   final BoxBorder? border;
   final Color? backgroundColor;
@@ -30,11 +33,10 @@ class KRoundedImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final imgUrl = imageUrl ?? defaultImageUrl;
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: width,
-        height: height,
         padding: padding,
         decoration: BoxDecoration(
             border: border,
@@ -45,10 +47,12 @@ class KRoundedImage extends StatelessWidget {
               ? BorderRadius.circular(borderRadius)
               : BorderRadius.zero,
           child: Image(
-              fit: fit,
+              width: width,
+              height: height,
+              fit: BoxFit.cover,
               image: isNetworkImage
-                  ? NetworkImage(imageUrl)
-                  : AssetImage(imageUrl) as ImageProvider),
+                  ? NetworkImage(imgUrl)
+                  : AssetImage(imgUrl) as ImageProvider),
         ),
       ),
     );

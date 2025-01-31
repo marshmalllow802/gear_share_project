@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gear_share_project/utils/constants/image_strings.dart';
 
 class ProductModel {
   final String id;
@@ -30,7 +31,7 @@ class ProductModel {
       price: 0.00,
       category: '',
       rentalPeriod: '',
-      images: [],
+      images: [KImages.productNoImage],
       author: '',
       status: '');
 

@@ -3,7 +3,6 @@ import 'package:gear_share_project/common/styles/shadow_styles.dart';
 import 'package:gear_share_project/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/common/widgets/images/rounded_image.dart';
-import 'package:gear_share_project/common/widgets/products/product_price/product_price.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/product/product_detail.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
@@ -47,7 +46,7 @@ class KProductCardVertical extends StatelessWidget {
                   ///Zdjęcie
                   KRoundedImage(
                     imageUrl: product.images[0],
-                    isNetworkImage: true,
+                    isNetworkImage: product.author != "",
                   ),
 
                   ///Ulubione
@@ -80,7 +79,10 @@ class KProductCardVertical extends StatelessWidget {
                   const SizedBox(height: KSizes.xs),
                   Text(
                     PostCategory.values
-                        .firstWhere((e) => e.toString() == product.category)
+                        .firstWhere(
+                          (e) => e.toString() == product.category,
+                          orElse: () => PostCategory.others,
+                        )
                         .name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -122,10 +124,10 @@ class KProductCardVertical extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            const Padding(
+            /*const Padding(
               padding: EdgeInsets.only(left: KSizes.sm),
               child: KProductPrice(price: '45', unit: 'za dzień'),
-            ),
+            ),*/
           ],
         ),
       ),
