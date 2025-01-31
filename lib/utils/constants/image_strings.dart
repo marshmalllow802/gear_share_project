@@ -25,6 +25,20 @@ class KImages {
   //Kategorie
   static const String categoryBooks =
       "lib/assets/icons/categories/category1.png";
+  static const String categoryCamera =
+      "lib/assets/icons/categories/category2.png";
+  static const String categoryFilms =
+      "lib/assets/icons/categories/category3.png";
+  static const String categoryLuggage =
+      "lib/assets/icons/categories/category4.png";
+  static const String categoryOther =
+      "lib/assets/icons/categories/category5.png";
+  static const String categoryTourism =
+      "lib/assets/icons/categories/category6.png";
+  static const String categoryOccasion =
+      "lib/assets/icons/categories/category7.png";
+  static const String categoryDrill =
+      "lib/assets/icons/categories/category8.png";
 
   //Products
   static const String productImage1 = "lib/assets/images/products/product1.jpg";
@@ -38,4 +52,8 @@ class KImages {
 
   //Ikonki
   static const String chat = "lib/assets/icons/messages.png";
+
+  //Loader
+  static const String loader =
+      "lib/assets/images/animations/loader_animation.gif";
 }

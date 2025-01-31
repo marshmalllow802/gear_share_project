@@ -12,19 +12,15 @@ class KFullScreenLoader {
       barrierDismissible: false,
       builder: (_) => PopScope(
         canPop: false,
-        child: Container(
-          color: KHelperFunctions.isDarkMode(Get.context!)
+        child: Scaffold(
+          backgroundColor: KHelperFunctions.isDarkMode(Get.context!)
               ? KColors.dark
               : KColors.white,
-          width: double.infinity,
-          height: double.infinity,
-          child:
-              /*const SizedBox(height: 250),*/
-              Center(
-                  child:
-                      KAnimationLoaderWidget(text: text, animation: animation)),
+          body: Center(
+            child: KAnimationLoaderWidget(text: text, animation: animation),
+          ),
         ),
-        ),
+      ),
     );
   }
 

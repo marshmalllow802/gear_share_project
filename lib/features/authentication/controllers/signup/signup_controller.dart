@@ -27,7 +27,7 @@ class SignupController extends GetxController {
   void signup() async {
     // Zacznij wczytywanie
     KFullScreenLoader.openLoadingDialog(
-        'Analizujemy przeslana informacje...', KImages.lightLogo);
+        'Analizujemy przeslana informacje...', KImages.loader);
 
     // Sprawdz polaczenie internetowe(pozniej)
 

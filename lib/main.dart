@@ -8,6 +8,9 @@ import 'package:gear_share_project/firebase_options.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'common/widgets/services/firebase_storage_service.dart';
+import 'features/shop/controllers/category_controller.dart';
+
 Future<void> main() async {
   final WidgetsBinding widgetsBinding =
       WidgetsFlutterBinding.ensureInitialized();
@@ -28,6 +31,8 @@ Future<void> main() async {
       print('User is signed in!');
     }
   });
+  Get.put(KFirebaseStorageService());
+
   // FirebaseAuth.instance
   //     .idTokenChanges()
   //     .listen((User? user) {
@@ -37,5 +42,10 @@ Future<void> main() async {
   //     print('User is signed in!');
   //   }
   // });
+// Inicjalizujemy kontroler CategoryController
+  final categoryController = Get.put(CategoryController());
+
+  // Upewniamy się, że kategorie zostały przesłane do Firestore, jeśli jeszcze tego nie zrobiono
+  await categoryController.uploadDummyCategoriesIfNeeded();
   runApp(const App());
 }

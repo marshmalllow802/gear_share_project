@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gear_share_project/common/widgets/images/circular_image.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 
@@ -12,11 +13,13 @@ class KVerticaalImageText extends StatelessWidget {
     this.textColor = KColors.white,
     this.backgroundColor,
     this.onTap,
+    this.isNetworkImage = true,
   });
 
   final String image, title;
   final Color textColor;
   final Color? backgroundColor;
+  final bool isNetworkImage;
   final void Function()? onTap;
 
   @override
@@ -29,22 +32,15 @@ class KVerticaalImageText extends StatelessWidget {
         child: Column(
           children: [
             /// Okragla ikona
-            Container(
-              width: 56,
-              height: 56,
-              padding: const EdgeInsets.all(KSizes.sm),
-              decoration: BoxDecoration(
-                color:
-                    backgroundColor ?? (dark ? KColors.black : KColors.white),
-                borderRadius: BorderRadius.circular(100),
-              ),
-              child: Center(
-                child: Image(
-                  image: AssetImage(image),
-                  fit: BoxFit.cover,
-                  color: dark ? KColors.light : KColors.dark,
-                ),
-              ),
+            KCircularImage(
+              image: image,
+              fit: BoxFit.fitWidth,
+              padding: KSizes.sm * 1.4,
+              isNetworkImage: isNetworkImage,
+              backgroundColor: backgroundColor,
+              overlayColor: KHelperFunctions.isDarkMode(context)
+                  ? KColors.light
+                  : KColors.dark,
             ),
             const SizedBox(
               height: KSizes.spaceBtwItems / 2,
