@@ -3,12 +3,13 @@ import 'package:gear_share_project/common/widgets/custom_shapes/containers/searc
 import 'package:gear_share_project/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
-import 'package:gear_share_project/features/shop/screens/add_screen/add_screen.dart';
 import 'package:gear_share_project/features/shop/services/firebase_service.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
+import 'package:get/get.dart';
 
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
 import '../../../../common/widgets/layouts/grid_layout.dart';
+import '../../../../utils/constants/routes.dart';
 import 'widgets/home_appbar.dart';
 import 'widgets/home_categories.dart';
 
@@ -110,12 +111,7 @@ class HomeScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddScreen()),
-          );
-        },
+        onPressed: () => Get.toNamed(KRoutes.addProduct),
       ),
     );
   }

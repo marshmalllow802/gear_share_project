@@ -4,8 +4,8 @@ import 'package:gear_share_project/common/widgets/custom_shapes/containers/round
 import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/common/widgets/images/rounded_image.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
-import 'package:gear_share_project/features/shop/screens/product/product_detail.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
+import 'package:gear_share_project/utils/constants/routes.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
@@ -24,7 +24,9 @@ class KProductCardVertical extends StatelessWidget {
     final dark = KHelperFunctions.isDarkMode(context);
     debugPrint('product.images[0]: ${product.images[0]}');
     return GestureDetector(
-      onTap: () => Get.to(() => const ProductDetail()),
+      onTap: () => Get.toNamed(
+        KRoutes.product.replaceAll(':id', product.id),
+      ),
       child: Container(
         width: 200,
         padding: const EdgeInsets.all(1),

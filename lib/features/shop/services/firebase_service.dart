@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:gear_share_project/features/personalization/models/user_model.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 
 class FirebaseService {
@@ -189,6 +190,32 @@ class FirebaseService {
     } catch (e) {
       debugPrint('Error getting categories: $e');
       throw 'Failed to load categories';
+    }
+  }
+
+  Future<String> getUserName(String userId) async {
+    try {
+      final doc = await _db.collection("Users").doc(userId).get();
+      if (doc.exists) {
+        return doc.data()?['username'] ?? 'Unknown User';
+      }
+      return 'Unknown User';
+    } catch (e) {
+      debugPrint('Error getting username: $e');
+      return 'Unknown User';
+    }
+  }
+
+  Future<UserModel?> getUser(String userId) async {
+    try {
+      final doc = await _db.collection("Users").doc(userId).get();
+      if (doc.exists) {
+        return UserModel.fromSnapshot(doc);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting user: $e');
+      return null;
     }
   }
 }

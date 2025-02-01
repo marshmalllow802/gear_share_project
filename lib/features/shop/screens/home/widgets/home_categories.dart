@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/image_text_widgets/vertical_image_text.dart';
 import 'package:gear_share_project/features/shop/controllers/category_controller.dart';
-import 'package:gear_share_project/features/shop/screens/category_pages/category_screen.dart';
+import 'package:gear_share_project/utils/constants/routes.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:get/get.dart';
 
@@ -33,9 +33,9 @@ class KHomeCategories extends StatelessWidget {
                 child: KVerticalImageText(
                     image: category.image,
                     title: category.name,
-                    onTap: () => Get.to(() => KCategoryScreen(
-                        category: category)) // Przekazujemy category
-                    ),
+                    onTap: () => Get.toNamed(
+                          KRoutes.category.replaceAll(':id', category.id),
+                        )),
               );
             },
           ),
