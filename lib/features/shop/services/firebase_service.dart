@@ -218,4 +218,24 @@ class FirebaseService {
       return null;
     }
   }
+
+  Future<List<ProductModel>> getProductsByCategory(String categoryId) async {
+    try {
+      final snapshot = await _db
+          .collection("Products")
+          .where('category', isEqualTo: categoryId)
+          .get();
+
+      final products =
+          snapshot.docs.map((doc) => ProductModel.fromSnapshot(doc)).toList();
+
+      // Сортируем по дате создания
+      products.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+      return products;
+    } catch (e) {
+      debugPrint('Error getting products by category: $e');
+      return [];
+    }
+  }
 }

@@ -12,45 +12,47 @@ class KSearchContainer extends StatelessWidget {
     required this.text,
     this.icon = Iconsax.search_normal_1,
     this.showBackground = true,
-    this.showBoarder = true,
+    this.showBorder = true,
     this.onTap,
+    this.onChanged,
   });
 
   final String text;
   final IconData? icon;
-  final bool showBackground, showBoarder;
+  final bool showBackground, showBorder;
   final VoidCallback? onTap;
+  final ValueChanged<String>? onChanged;
 
   @override
   Widget build(BuildContext context) {
     final dark = KHelperFunctions.isDarkMode(context);
 
     return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: KSizes.defaultSpace),
-        child: Container(
-          width: KDeviceUtilities.getScreenWidth(context),
-          padding: const EdgeInsets.all(KSizes.md),
-          decoration: BoxDecoration(
-              color: showBackground
+        child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: KSizes.defaultSpace),
+      child: Container(
+        width: KDeviceUtilities.getScreenWidth(context),
+        padding: const EdgeInsets.all(KSizes.xs),
+        decoration: BoxDecoration(
+          color: showBackground
                   ? dark
                       ? KColors.dark
                       : KColors.light
                   : Colors.transparent,
               borderRadius: BorderRadius.circular(KSizes.cardRadiusLg),
-              border: showBoarder ? Border.all(color: KColors.softGrey) : null),
-          child: Row(
-            children: [
-              Icon(icon, color: KColors.softGrey),
-              const SizedBox(
-                width: KSizes.spaceBtwItems,
-              ),
-              Text(text, style: Theme.of(context).textTheme.bodySmall),
-            ],
+          border: showBorder ? Border.all(color: KColors.grey) : null,
+        ),
+        child: TextField(
+          onTap: onTap,
+          onChanged: onChanged,
+          decoration: InputDecoration(
+            hintText: text,
+            hintStyle: Theme.of(context).textTheme.bodySmall,
+            border: InputBorder.none,
+            prefixIcon: Icon(icon, color: KColors.grey),
           ),
         ),
       ),
-    );
+    ));
   }
 }
