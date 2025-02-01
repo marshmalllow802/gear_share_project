@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/appbar/appbar.dart';
@@ -60,7 +59,6 @@ class _AddScreenState extends State<AddScreen> {
     }
   }*/
 
-  final _db = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
