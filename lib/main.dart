@@ -33,6 +33,7 @@ Future<void> main() async {
     }
   });
   Get.put(KFirebaseStorageService());
+  Get.put(CategoryController()); // Просто инициализируем контроллер
 
   // FirebaseAuth.instance
   //     .idTokenChanges()
@@ -43,10 +44,6 @@ Future<void> main() async {
   //     print('User is signed in!');
   //   }
   // });
-// Inicjalizujemy kontroler CategoryController
-  final categoryController = Get.put(CategoryController());
 
-  // Upewniamy się, że kategorie zostały przesłane do Firestore, jeśli jeszcze tego nie zrobiono
-  await categoryController.uploadDummyCategoriesIfNeeded();
   runApp(const App());
 }

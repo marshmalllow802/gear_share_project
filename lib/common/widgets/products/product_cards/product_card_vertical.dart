@@ -6,7 +6,6 @@ import 'package:gear_share_project/common/widgets/images/rounded_image.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/product/product_detail.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
-import 'package:gear_share_project/utils/constants/enums.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
@@ -36,7 +35,7 @@ class KProductCardVertical extends StatelessWidget {
         ),
         child: Column(
           children: [
-            /// Zdjęcie i ulubiony
+            /// Thumbnail и избранное
             KRoundedContainer(
               height: 180,
               padding: const EdgeInsets.all(KSizes.sm),
@@ -51,83 +50,76 @@ class KProductCardVertical extends StatelessWidget {
 
                   ///Ulubione
                   const Positioned(
-                      bottom: 0,
-                      right: 0,
-                      child: KCircularIcon(
-                        icon: Iconsax.heart5,
-                        color: KColors.buttonPrimary,
-                      )),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: KSizes.spaceBtwItems / 2),
-
-            /// Opis
-            Padding(
-              padding: const EdgeInsets.all(KSizes.sm),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ///Nazwa produktu
-                  Text(
-                    product.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: KSizes.xs),
-                  Text(
-                    PostCategory.values
-                        .firstWhere(
-                          (e) => e.toString() == product.category,
-                          orElse: () => PostCategory.others,
-                        )
-                        .name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                  const SizedBox(height: KSizes.xs),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          '${product.price.toString()} zł',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(KSizes.xs),
-                        decoration: BoxDecoration(
-                          color: product.status == 'available'
-                              ? Colors.green.withOpacity(0.1)
-                              : Colors.red.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(KSizes.xs),
-                        ),
-                        child: Text(
-                          product.status,
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: product.status == 'available'
-                                        ? Colors.green
-                                        : Colors.red,
-                                  ),
-                        ),
-                      ),
-                    ],
+                    bottom: 0,
+                    right: 0,
+                    child: KCircularIcon(
+                      icon: Iconsax.heart5,
+                      color: KColors.buttonPrimary,
+                    ),
                   ),
                 ],
               ),
             ),
-            const Spacer(),
-            /*const Padding(
-              padding: EdgeInsets.only(left: KSizes.sm),
-              child: KProductPrice(price: '45', unit: 'za dzień'),
-            ),*/
+
+            /// Информация о продукте
+            Expanded(
+              // Оборачиваем в Expanded
+              child: Padding(
+                padding: const EdgeInsets.all(KSizes.sm),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: KSizes.xs),
+                    Text(
+                      product.categoryName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium,
+                    ),
+                    const SizedBox(height: KSizes.xs),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${product.price.toString()} zł',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(KSizes.xs),
+                          decoration: BoxDecoration(
+                            color: product.status == 'available'
+                                ? Colors.green.withOpacity(0.1)
+                                : Colors.red.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(KSizes.xs),
+                          ),
+                          child: Text(
+                            product.status,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelSmall
+                                ?.copyWith(
+                                  color: product.status == 'available'
+                                      ? Colors.green
+                                      : Colors.red,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

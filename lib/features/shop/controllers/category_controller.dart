@@ -1,61 +1,122 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:gear_share_project/features/shop/models/category_model.dart';
 import 'package:get/get.dart';
-
-import '../../../common/widgets/services/firebase_storage_service.dart';
-import '../../../data/dummy_data.dart';
-import '../../../data/repositories/categories/category_repository.dart';
 
 class CategoryController extends GetxController {
   static CategoryController get instance => Get.find();
 
-  final isLoading = false.obs;
-  final _categoryRepository = Get.put(CategoryRepository());
+  final _db = FirebaseFirestore.instance;
+  RxList<CategoryModel> categories = <CategoryModel>[].obs;
   RxList<CategoryModel> allCategories = <CategoryModel>[].obs;
   RxList<CategoryModel> featuredCategories = <CategoryModel>[].obs;
-  final _firebaseStorageService = KFirebaseStorageService.instance;
+  RxBool isLoading = false.obs;
 
   @override
   void onInit() {
-    fetchCategories(); // Ładowanie kategorii na starcie
     super.onInit();
-    uploadCategoriesToFirebase();
+    fetchCategories();
   }
 
-  Future<void> uploadCategoriesToFirebase() async {
-    await _firebaseStorageService
-        .uploadCategoryImages(); // Prześlij obrazy i zapisz kategorie
-  }
-
-  /// Funkcja do ładowania kategorii z Firestore
+  /// Load categories from Firestore
   Future<void> fetchCategories() async {
     isLoading.value = true;
-
     try {
-      final categories = await _categoryRepository.getAllCategories();
+      final categoriesRef = await _db.collection('Categories').get();
+      debugPrint('Fetched categories from Firebase:');
+      categoriesRef.docs.forEach((doc) {
+        debugPrint('Category data: ${doc.data()}');
+      });
+
+      categories.value = categoriesRef.docs
+          .map((doc) => CategoryModel.fromJson(doc.data()))
+          .toList();
+
       allCategories.assignAll(categories);
-
-      // Filtrujemy kategorie, aby wyświetlić tylko te z "isFeatured" jako true
-      featuredCategories.assignAll(allCategories
-          .where((category) => category.isFeatured && category.parentId.isEmpty)
-          .take(8)
-          .toList());
+      featuredCategories.assignAll(
+          categories.where((category) => category.isFeatured).toList());
     } catch (e) {
-      print('Błąd podczas ładowania kategorii: $e');
+      debugPrint('Error fetching categories: $e');
     } finally {
-      isLoading.value = false; // Ustawiamy, że ładowanie zakończone
+      isLoading.value = false;
     }
   }
 
-  /// Metoda do wysyłania danych, jeśli jeszcze nie zostały zapisane
+  /// Upload initial categories if collection is empty
   Future<void> uploadDummyCategoriesIfNeeded() async {
-    final categories = await _categoryRepository.getAllCategories();
-    if (categories.isEmpty) {
-      // Jeśli kategorie nie zostały załadowane, wywołaj uploadDummyData
-      await _categoryRepository.uploadDummyData(KDummyData.categories);
+    try {
+      final categoriesRef = _db.collection('Categories');
+      final snapshot = await categoriesRef.get();
+
+      if (snapshot.docs.isEmpty) {
+        debugPrint('No categories found, uploading dummy data...');
+        final batch = _db.batch();
+
+        final dummyCategories = [
+          CategoryModel(
+            id: 'books',
+            name: 'Books',
+            image: 'assets/images/categories/books.png',
+            isFeatured: true,
+          ),
+          CategoryModel(
+              id: 'vehicles',
+              name: 'Vehicles',
+              image: 'assets/images/categories/vehicles.png'),
+          CategoryModel(
+              id: 'clothing',
+              name: 'Clothing',
+              image: 'assets/images/categories/clothing.png'),
+          CategoryModel(
+              id: 'tools',
+              name: 'Tools',
+              image: 'assets/images/categories/tools.png'),
+          CategoryModel(
+              id: 'others',
+              name: 'Others',
+              image: 'assets/images/categories/others.png'),
+        ];
+
+        for (var category in dummyCategories) {
+          final docRef = categoriesRef.doc(category.id);
+          debugPrint('Uploading category: ${category.toJson()}');
+          batch.set(docRef, category.toJson());
+        }
+
+        await batch.commit();
+        await fetchCategories();
+        debugPrint('Categories uploaded successfully');
+      }
+    } catch (e) {
+      debugPrint('Error uploading categories: $e');
     }
   }
 
-  /// --Ladowanie wybranej kategorii
+  /// Migrate old category format to new one
+  Future<void> migrateCategories() async {
+    try {
+      debugPrint('Starting categories migration...');
+      final categoriesRef = _db.collection('Categories');
+      final snapshot = await categoriesRef.get();
 
-  /// --Otrzymanie produktów z kategorii
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final updatedData = {
+          'id': doc.id,
+          'name': data['Name'] ?? data['name'] ?? '',
+          'image': data['Image'] ?? data['image'] ?? '',
+          'isActive': true,
+          'isFeatured': data['IsFeatured'] ?? data['isFeatured'] ?? false,
+        };
+
+        debugPrint('Migrating category ${doc.id}: $updatedData');
+        await categoriesRef.doc(doc.id).set(updatedData);
+      }
+
+      debugPrint('Categories migration completed');
+      await fetchCategories(); // Перезагружаем категории
+    } catch (e) {
+      debugPrint('Error migrating categories: $e');
+    }
+  }
 }

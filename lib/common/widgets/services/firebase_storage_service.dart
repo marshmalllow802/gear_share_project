@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:gear_share_project/features/shop/models/category_model.dart';
 import 'package:get/get.dart';
 
 import '../../../data/dummy_data.dart';
@@ -78,25 +80,35 @@ class KFirebaseStorageService extends GetxController {
   // Funkcja do załadowania obrazków z assets do Firebase Storage i zapisanie URL w Firestore
   Future<void> uploadCategoryImages() async {
     try {
-      for (var category in KDummyData.categories) {
-        // Wczytaj obrazek z assets
+      final categories = KDummyData.categories;
+      for (var category in categories) {
+        // Загружаем изображение из assets
         final imageData = await getImageDataFromAssets(category.image);
 
-        // Załaduj obrazek do Firebase Storage i uzyskaj URL
-        final imageUrl =
-            await uploadImageData('categories/', imageData, category.name);
+        // Загружаем в Firebase Storage
+        final imageUrl = await uploadImageData(
+          'categories/',
+          imageData,
+          category.name, // Используем имя категории как имя файла
+        );
 
-        // Zaktualizuj kategorię z URL obrazu
-        category.image = imageUrl;
+        // Создаем новую категорию с обновленным URL изображения
+        final updatedCategory = CategoryModel(
+          id: category.id,
+          name: category.name,
+          image: imageUrl,
+          isActive: category.isActive,
+          isFeatured: category.isFeatured,
+        );
 
-        // Teraz możesz zapisać kategorię w Firestore
+        // Сохраняем в Firestore
         await FirebaseFirestore.instance
             .collection('Categories')
             .doc(category.id)
-            .set(category.toJson());
+            .set(updatedCategory.toJson());
       }
     } catch (e) {
-      print("Błąd podczas ładowania obrazków: $e");
+      debugPrint('Error uploading category images: $e');
     }
   }
 }

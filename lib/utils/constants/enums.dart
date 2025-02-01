@@ -1,7 +1,8 @@
 enum PostCategory {
   books,
-  vehiles,
+  vehicles,
   clothing,
+  tools,
   others,
 }
 

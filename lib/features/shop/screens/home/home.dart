@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/custom_shapes/containers/search_container.dart';
 import 'package:gear_share_project/common/widgets/products/product_cards/product_card_vertical.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/add_screen/add_screen.dart';
+import 'package:gear_share_project/features/shop/services/firebase_service.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 
 import '../../../../common/widgets/custom_shapes/containers/primary_header_container.dart';
@@ -17,19 +17,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final db = FirebaseFirestore.instance;
+    final firebaseService = FirebaseService();
 
-    /// Otrzymaj wszystkie kategorie
+    /// Получаем все продукты
     Future<List<ProductModel>> getAllProducts() async {
       try {
-        final snapshot = await db.collection('Products').get();
-        final list = snapshot.docs
-            .map((document) => ProductModel.fromSnapshot(
-                document as DocumentSnapshot<Map<String, dynamic>>))
-            .toList();
-        return list;
-      } on FirebaseException catch (e) {
-        debugPrint("FirebaseFirestore error: $e");
+        return await firebaseService.getAllProducts();
+      } catch (e) {
+        debugPrint("Error: $e");
         throw 'Coś poszło nie tak. Spróbuj ponownie później.';
       }
     }
