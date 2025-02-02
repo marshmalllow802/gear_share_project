@@ -85,16 +85,17 @@ class KProductCardVertical extends StatelessWidget {
                       title: product.title,
                       smallSize: true,
                     ),
-                    SizedBox(height: KSizes.spaceBtwItems / 2),
-
-                    ///status dostępności
-                    KProductAvailability(status: product.status),
+                    const SizedBox(height: KSizes.xs),
                     Text(
                       product.categoryName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
+                    SizedBox(height: KSizes.spaceBtwItems / 2),
+
+                    ///status dostępności
+                    KProductAvailability(status: product.status),
                     const SizedBox(height: KSizes.xs),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -134,7 +135,7 @@ class KProductCardVertical extends StatelessWidget {
                       padding: EdgeInsets.only(left: KSizes.sm),
                       child: KProductPrice(
                           price: product.price.toString(),
-                          unit: product.rentalPeriod),
+                          unit: product.rentalPeriodDisplay),
                     ),
                   ],
                 ),

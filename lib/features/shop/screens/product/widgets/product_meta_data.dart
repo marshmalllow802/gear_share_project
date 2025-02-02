@@ -22,7 +22,7 @@ class KProductMetaData extends StatelessWidget {
         ///Cena
         KProductPrice(
             price: product.price.toString(),
-            unit: product.rentalPeriod,
+            unit: product.rentalPeriodDisplay,
             isLarge: true),
         SizedBox(height: KSizes.spaceBtwItems / 1.5),
 

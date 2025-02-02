@@ -254,7 +254,7 @@ class _AddScreenState extends State<AddScreen> {
                       items: RentalPeriod.values.map((period) {
                         return DropdownMenuItem(
                           value: period,
-                          child: Text(period.name),
+                          child: Text(period.displayName),
                         );
                       }).toList(),
                       onChanged: (value) {

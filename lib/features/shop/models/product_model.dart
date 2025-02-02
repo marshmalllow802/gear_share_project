@@ -32,10 +32,11 @@ class ProductModel {
   });
 
   RentalPeriod get rentalPeriodEnum {
-    return RentalPeriod.values.firstWhere(
-      (e) => e.toString() == rentalPeriod,
-      orElse: () => RentalPeriod.oneDay,
-    );
+    return RentalPeriod.fromString('RentalPeriod.$rentalPeriod');
+  }
+
+  String get rentalPeriodDisplay {
+    return rentalPeriodEnum.displayName;
   }
 
   static ProductModel empty() => ProductModel(

@@ -41,7 +41,7 @@ class KProductAttributes extends StatelessWidget {
                           const SizedBox(width: KSizes.spaceBtwItems),
                           KProductPrice(
                               price: product.price.toString(),
-                              unit: product.rentalPeriod),
+                              unit: product.rentalPeriodDisplay),
                         ],
                       ),
                       Row(

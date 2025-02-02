@@ -28,10 +28,26 @@ enum PostStatus {
 }
 
 enum RentalPeriod {
-  oneDay,
-  oneWeek,
-  oneMonth,
-  custom,
+  oneDay('Za dzień'),
+  oneWeek('Za tydzień'),
+  oneMonth('Za miesiąc'),
+  custom('Niestandardowy');
+
+  final String displayName;
+
+  const RentalPeriod(this.displayName);
+
+  // Konwersja z String (z Firebase) na RentalPeriod
+  static RentalPeriod fromString(String value) {
+    return RentalPeriod.values.firstWhere(
+      (e) => e.toString() == value,
+      orElse: () => RentalPeriod.oneDay,
+    );
+  }
+
+  // Konwersja RentalPeriod na displayName
+  @override
+  String toString() => displayName;
 }
 
 enum TextSizes { small, medium, large }
