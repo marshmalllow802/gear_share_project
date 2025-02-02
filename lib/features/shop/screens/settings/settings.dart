@@ -5,6 +5,7 @@ import 'package:gear_share_project/common/widgets/list_tiles/profil_menu_tile.da
 import 'package:gear_share_project/common/widgets/list_tiles/user_profile_tile.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/features/authentication/screens/login/login.dart';
+import 'package:gear_share_project/features/shop/screens/my_products/my_products.dart';
 import 'package:gear_share_project/features/shop/screens/profile/profile.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
@@ -84,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.bag_tick,
                     title: 'Twoje ogłoszenia',
                     subTitle: 'Zarządzaj swoimi ogłoszeniami',
-                    onTap: () {},
+                    onTap: () => Get.to(() => const MyProductsScreen()),
                   ),
                   KProfileMenuTile(
                     icon: Iconsax.star,
