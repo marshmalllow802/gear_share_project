@@ -7,4 +7,5 @@ class KRoutes {
   static const String search = '/search';
   static const String cart = '/cart';
   static const String settings = '/settings';
+  static const String searchResults = '/search_results';
 }

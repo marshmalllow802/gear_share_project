@@ -66,9 +66,7 @@ class _KCategoryScreenState extends State<KCategoryScreen> {
           child: Column(
             children: [
               KSearchContainer(
-                showBackground: false,
-                text: 'Szukaj',
-                onChanged: (value) => setState(() => searchQuery = value),
+                text: 'Szukaj w ${widget.category.name}',
               ),
               const SizedBox(height: KSizes.spaceBtwSections),
               if (isLoading)
