@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_shapes/curved_edges/curved_edges_widget.dart';
@@ -80,18 +79,19 @@ class _KProductImageSliderState extends State<KProductImageSlider> {
               showBackArrowWithBackground: true,
               backgroundColor: Colors.transparent,
               actions: [
-                FutureBuilder<bool>(
-                  future: controller.isProductFavorite(widget.product.id),
-                  builder: (context, snapshot) {
-                    final isFavorite = snapshot.data ?? false;
-                    return KCircularIcon(
-                      icon: isFavorite ? Iconsax.heart5 : Iconsax.heart,
-                      color: isFavorite ? KColors.primary : null,
+                Positioned(
+                  right: 0,
+                  child: Obx(
+                    () => KCircularIcon(
+                      icon: controller.isFavorite(widget.product.id)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: KColors.primary,
                       backgroundColor: dark ? KColors.dark : KColors.white,
                       onPressed: () =>
                           controller.toggleFavorite(widget.product.id),
-                    );
-                  },
+                    ),
+                  ),
                 ),
               ],
             ),

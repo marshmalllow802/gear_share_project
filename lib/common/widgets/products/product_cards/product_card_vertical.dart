@@ -58,23 +58,16 @@ class KProductCardVertical extends StatelessWidget {
                   Positioned(
                     bottom: 0,
                     right: 0,
-                    child: FutureBuilder<bool>(
-                      future: controller.isProductFavorite(product.id),
-                      builder: (context, snapshot) {
-                        final isFavorite = snapshot.data ?? false;
-                        return IconButton(
-                          onPressed: () =>
-                              controller.toggleFavorite(product.id),
-                          icon: KCircularIcon(
-                            icon: isFavorite
-                                ? Icons.favorite
+                    child: Obx(
+                      () => KCircularIcon(
+                        icon: controller.isFavorite(product.id)
+                            ? Icons.favorite
                                 : Icons.favorite_border,
-                            color: isFavorite ? KColors.primary : null,
-                            backgroundColor:
+                        color: KColors.primary,
+                        backgroundColor:
                                 dark ? KColors.dark : KColors.white,
-                          ),
-                        );
-                      },
+                        onPressed: () => controller.toggleFavorite(product.id),
+                      ),
                     ),
                   ),
                 ],
