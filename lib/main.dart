@@ -42,6 +42,9 @@ Future<void> main() async {
   Get.put(CategoryController());
   Get.put(FirebaseService());
 
+  // Мигрируем категории
+  // await Get.find<CategoryController>().migrateCategories();
+
   // FirebaseAuth.instance
   //     .idTokenChanges()
   //     .listen((User? user) {
