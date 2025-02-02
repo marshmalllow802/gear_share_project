@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/styles/shadow_styles.dart';
+import 'package:gear_share_project/common/widgets/availability/product_availability.dart';
 import 'package:gear_share_project/common/widgets/custom_shapes/containers/rounded_container.dart';
 import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/common/widgets/images/rounded_image.dart';
+import 'package:gear_share_project/common/widgets/products/product_price/product_price.dart';
+import 'package:gear_share_project/common/widgets/texts/product_title_text.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
 import 'package:gear_share_project/utils/constants/routes.dart';
@@ -71,13 +74,21 @@ class KProductCardVertical extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    /*Text(
                       product.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    const SizedBox(height: KSizes.xs),
+                    const SizedBox(height: KSizes.xs),*/
+                    KProductTitleText(
+                      title: product.title,
+                      smallSize: true,
+                    ),
+                    SizedBox(height: KSizes.spaceBtwItems / 2),
+
+                    ///status dostępności
+                    KProductAvailability(status: product.status),
                     Text(
                       product.categoryName,
                       maxLines: 1,
@@ -88,15 +99,15 @@ class KProductCardVertical extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
+                        /*Expanded(
                           child: Text(
                             '${product.price.toString()} zł',
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                        ),
-                        Container(
+                        ),*/
+                        /*Container(
                           padding: const EdgeInsets.all(KSizes.xs),
                           decoration: BoxDecoration(
                             color: product.status == 'available'
@@ -115,8 +126,15 @@ class KProductCardVertical extends StatelessWidget {
                                       : Colors.red,
                                 ),
                           ),
-                        ),
+                        ),*/
                       ],
+                    ),
+                    const Spacer(),
+                    Padding(
+                      padding: EdgeInsets.only(left: KSizes.sm),
+                      child: KProductPrice(
+                          price: product.price.toString(),
+                          unit: product.rentalPeriod),
                     ),
                   ],
                 ),

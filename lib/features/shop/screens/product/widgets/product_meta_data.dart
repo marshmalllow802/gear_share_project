@@ -32,7 +32,7 @@ class KProductMetaData extends StatelessWidget {
             KProductTitleText(title: 'Status:  '),
             SizedBox(height: KSizes.spaceBtwItems),
             KProductAvailability(
-              isAvailable: true,
+              status: "Dostępny",
               availabilityTextSize: TextSizes.medium,
             ),
           ],

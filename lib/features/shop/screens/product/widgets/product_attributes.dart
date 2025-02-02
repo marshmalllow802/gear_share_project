@@ -50,7 +50,7 @@ class KProductAttributes extends StatelessWidget {
                               title: 'Status : ', smallSize: true),
                           const SizedBox(width: KSizes.spaceBtwItems),
                           KProductAvailability(
-                            isAvailable: product.status == 'available',
+                            status: product.status,
                             availabilityTextSize: TextSizes.medium,
                           ),
                         ],
