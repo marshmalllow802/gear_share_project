@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/device/device_utility.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
-import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 class KAppBar extends StatelessWidget implements PreferredSizeWidget {
   const KAppBar(
@@ -13,13 +12,17 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.showBackArror = false,
       this.leadingIcon,
       this.actions,
-      this.leadingOnPressed});
+      this.leadingOnPressed,
+      this.backgroundColor = Colors.transparent,
+      this.showBackArrowWithBackground = false});
 
   final Widget? title;
   final bool showBackArror;
   final IconData? leadingIcon;
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
+  final Color? backgroundColor;
+  final bool showBackArrowWithBackground;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +31,21 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.symmetric(horizontal: KSizes.md),
       child: AppBar(
         automaticallyImplyLeading: false,
-        leading: showBackArror
-            ? IconButton(
-                onPressed: () => Get.back(),
-                icon: Icon(Iconsax.arrow_left,
-                    color: dark ? KColors.white : KColors.dark))
-            : leadingIcon != null
-                ? IconButton(
-                    onPressed: leadingOnPressed, icon: Icon(leadingIcon))
-                : null,
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        leading: showBackArror || leadingIcon != null
+            ? showBackArrowWithBackground
+                ? KCircularIcon(
+                    icon: leadingIcon ?? Icons.arrow_back,
+                    color: dark ? KColors.white : KColors.black,
+                    backgroundColor: dark ? KColors.dark : KColors.white,
+                    onPressed: leadingOnPressed ?? () => Navigator.pop(context),
+                  )
+                : IconButton(
+                    onPressed: leadingOnPressed ?? () => Navigator.pop(context),
+                    icon: Icon(leadingIcon ?? Icons.arrow_back),
+                  )
+            : null,
         title: title,
         actions: actions,
       ),

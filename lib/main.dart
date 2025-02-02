@@ -16,6 +16,7 @@ import 'features/shop/screens/product/product_detail.dart';
 import 'features/shop/screens/profile/profile.dart';
 import 'features/shop/services/firebase_service.dart';
 import 'utils/constants/routes.dart';
+import 'utils/theme/theme.dart';
 
 Future<void> main() async {
   final WidgetsBinding widgetsBinding =
@@ -56,6 +57,8 @@ Future<void> main() async {
   // });
 
   runApp(GetMaterialApp(
+    theme: KAppTheme.lightTheme,
+    darkTheme: KAppTheme.darkTheme,
     getPages: [
       GetPage(name: KRoutes.home, page: () => const HomeScreen()),
       GetPage(name: KRoutes.profile, page: () => const ProfileScreen()),

@@ -71,9 +71,11 @@ class _KProductImageSliderState extends State<KProductImageSlider> {
             ),
 
             ///AppBar ikonki
-            const KAppBar(
+            KAppBar(
               showBackArror: true,
-              actions: [
+              showBackArrowWithBackground: true,
+              backgroundColor: Colors.transparent,
+              actions: const [
                 KCircularIcon(icon: Iconsax.heart5, color: KColors.primary)
               ],
             ),

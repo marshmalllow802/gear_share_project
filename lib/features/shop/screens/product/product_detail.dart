@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gear_share_project/common/widgets/appbar/appbar.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/features/personalization/models/user_model.dart';
 import 'package:gear_share_project/features/shop/screens/product/widgets/product_attributes.dart';
@@ -23,7 +22,6 @@ class ProductDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: KAppBar(showBackArror: true),
       body: FutureBuilder<ProductModel?>(
         future: id != null
             ? Get.find<FirebaseService>().getProduct(id!)
