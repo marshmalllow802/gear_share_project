@@ -31,8 +31,8 @@ class SignupController extends GetxController {
     // Walidacja formatki rejestracyjnej
     if (!signupFormKey.currentState!.validate()) {
       // Usun loader
-      /*KFullScreenLoader.stopLoading();
-      return;*/
+      /*  KFullScreenLoader.stopLoading();*/
+      return;
     }
 
     // Sprawdz polityke prywatnosci
