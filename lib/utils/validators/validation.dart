@@ -24,7 +24,7 @@ class KValidator {
       return 'Hasło jest wymagane.';
     }
 
-    /* if (value.length < 6) {
+    if (value.length < 6) {
       return 'Hasło ma być dłuższe nić 6 znaków.';
     }
 
@@ -37,7 +37,7 @@ class KValidator {
 
     if (!value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
       return 'Hasło musi posiadać przynajmniej jeden znak specjalny';
-    }*/
+    }
     return null;
   }
 

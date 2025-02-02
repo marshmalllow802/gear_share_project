@@ -4,8 +4,6 @@ import 'package:gear_share_project/data/repositories/authentication/authenticati
 import 'package:gear_share_project/data/repositories/user/user_repository.dart';
 import 'package:gear_share_project/features/authentication/screens/signup/verify_email.dart';
 import 'package:gear_share_project/features/personalization/models/user_model.dart';
-import 'package:gear_share_project/utils/constants/image_strings.dart';
-import 'package:gear_share_project/utils/popups/full_screen_loader.dart';
 import 'package:get/get.dart';
 
 class SignupController extends GetxController {
@@ -25,16 +23,16 @@ class SignupController extends GetxController {
   /// Rejestracja
   void signup() async {
     // Zacznij wczytywanie
-    KFullScreenLoader.openLoadingDialog(
-        'Analizujemy przeslana informacje...', KImages.loader);
+    /*KFullScreenLoader.openLoadingDialog(
+        'Analizujemy przeslana informacje...', KImages.loader);*/
 
     // Sprawdz polaczenie internetowe(pozniej)
 
     // Walidacja formatki rejestracyjnej
     if (!signupFormKey.currentState!.validate()) {
       // Usun loader
-      KFullScreenLoader.stopLoading();
-      return;
+      /*KFullScreenLoader.stopLoading();
+      return;*/
     }
 
     // Sprawdz polityke prywatnosci
@@ -66,7 +64,7 @@ class SignupController extends GetxController {
     await userRepository.saveUserRecord(newUser);
 
     // Usun loader
-    KFullScreenLoader.stopLoading();
+    /*KFullScreenLoader.stopLoading();*/
 
     // Pokaz wiadomosc sukcesu
 
