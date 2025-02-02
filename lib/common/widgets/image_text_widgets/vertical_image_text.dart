@@ -5,8 +5,8 @@ import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 
 import '../../../utils/constants/colors.dart';
 
-class KVerticaalImageText extends StatelessWidget {
-  const KVerticaalImageText({
+class KVerticalImageText extends StatelessWidget {
+  const KVerticalImageText({
     super.key,
     required this.image,
     required this.title,

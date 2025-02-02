@@ -75,6 +75,7 @@ flutter:
   - lib/assets/images/animations/
   - lib/assets/images/products/
   - lib/assets/images/user/
+  - lib/assets/images/no-image/
   - lib/assets/icons/categories/
 
   # fonts:

@@ -46,6 +46,8 @@ class KImages {
   static const String productImage3 = "lib/assets/images/products/product3.jpg";
   static const String productImage4 = "lib/assets/images/products/product4.jpg";
   static const String productImage5 = "lib/assets/images/products/product5.png";
+  static const String productNoImage =
+      "lib/assets/images/no-image/pngtree-no-image-vector-illustration-isolated-png-image_4979075.jpg";
 
   //Użytkownik
   static const String userImage = "lib/assets/images/user/user.png";

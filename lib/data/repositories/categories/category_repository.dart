@@ -11,33 +11,21 @@ class CategoryRepository extends GetxController {
   ///Variables
   final _db = FirebaseFirestore.instance;
 
-  /// Otrzymaj wszystkie kategorie
+  /// Get all categories from Firestore
   Future<List<CategoryModel>> getAllCategories() async {
     try {
       final snapshot = await _db.collection('Categories').get();
       final list = snapshot.docs
-          .map((document) => CategoryModel.fromSnapshot(document))
+          .map((doc) => CategoryModel.fromJson(doc.data()))
           .toList();
       return list;
-    } on FirebaseException catch (e) {
-      debugPrint("FirebaseFirestore error: $e");
-      throw 'Coś poszło nie tak. Spróbuj ponownie później.';
+    } catch (e) {
+      debugPrint('Error getting categories: $e');
+      throw 'Something went wrong. Please try again later.';
     }
   }
 
-  /// Załaduj kategorie do Cloud Firebase
-/*Future<void> uploadDummyData(List<CategoryModel> categories) async {
-    final storage = Get.put(KFirebaseStorageService());
-
-    for (var category in categories) {
-      final file = await storage.getImageDataFromAssets(category.image);
-      final url = await storage.uploadImageData('Categories', file, category.name);
-
-      category.image = url;
-      await _db.collection("Categories").doc(category.id).set(category.toJson());
-    }
-}*/
-// Dodajmy logowanie URL-a w metodzie uploadDummyData
+  /// Upload categories to Firestore
   Future<void> uploadDummyData(List<CategoryModel> categories) async {
     final storage = Get.put(KFirebaseStorageService());
 
@@ -46,22 +34,25 @@ class CategoryRepository extends GetxController {
         final file = await storage.getImageDataFromAssets(category.image);
         final url =
             await storage.uploadImageData('Categories', file, category.name);
+        debugPrint('URL for category ${category.name}: $url');
 
-        // Logowanie URL-a, aby upewnić się, że jest poprawny
-        print("URL dla kategorii ${category.name}: $url");
-
-        category.image = url;
+        final updatedCategory = CategoryModel(
+          id: category.id,
+          name: category.name,
+          image: url,
+          isActive: category.isActive,
+          isFeatured: category.isFeatured,
+        );
 
         await _db
-            .collection("Categories")
+            .collection('Categories')
             .doc(category.id)
-            .set(category.toJson());
+            .set(updatedCategory.toJson());
       }
-
-      print("Kategorie zostały wysłane do Firestore.");
+      debugPrint('Categories uploaded successfully');
     } catch (e) {
-      print("Błąd podczas wysyłania kategorii: $e");
-      rethrow; // Ponowne rzucenie wyjątku
+      debugPrint('Error uploading categories: $e');
+      rethrow;
     }
   }
 }

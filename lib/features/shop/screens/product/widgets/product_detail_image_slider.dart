@@ -6,14 +6,21 @@ import '../../../../../common/widgets/appbar/appbar.dart';
 import '../../../../../common/widgets/custom_shapes/curved_edges/curved_edges_widget.dart';
 import '../../../../../common/widgets/icons/circular_icon.dart';
 import '../../../../../common/widgets/images/rounded_image.dart';
+import '../../../../../features/shop/models/product_model.dart';
 import '../../../../../utils/constants/colors.dart';
-import '../../../../../utils/constants/image_strings.dart';
 import '../../../../../utils/constants/sizes.dart';
 
-class KProductImageSlider extends StatelessWidget {
-  const KProductImageSlider({
-    super.key,
-  });
+class KProductImageSlider extends StatefulWidget {
+  final ProductModel product;
+
+  const KProductImageSlider({super.key, required this.product});
+
+  @override
+  State<KProductImageSlider> createState() => _KProductImageSliderState();
+}
+
+class _KProductImageSliderState extends State<KProductImageSlider> {
+  int currentImageIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +31,9 @@ class KProductImageSlider extends StatelessWidget {
         child: Stack(
           children: [
             ///Główne zdjęcie
-            const SizedBox(
+            SizedBox(
               height: 400,
-              child: Padding(
-                padding: EdgeInsets.all(KSizes.productImageRadius * 2),
-                child: Center(
-                    child: Image(image: AssetImage(KImages.productImage5))),
-              ),
+              child: Image.network(widget.product.images[currentImageIndex]),
             ),
 
             ///Slider
@@ -43,16 +46,26 @@ class KProductImageSlider extends StatelessWidget {
                 child: ListView.separated(
                   separatorBuilder: (_, __) =>
                       const SizedBox(width: KSizes.spaceBtwItems),
-                  itemCount: 10,
+                  itemCount: widget.product.images.length,
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   physics: const AlwaysScrollableScrollPhysics(),
-                  itemBuilder: (_, index) => KRoundedImage(
+                  itemBuilder: (_, index) => GestureDetector(
+                    onTap: () => setState(() => currentImageIndex = index),
+                    child: KRoundedImage(
                       width: 80,
                       backgroundColor: dark ? KColors.dark : KColors.white,
-                      border: Border.all(color: KColors.primary),
+                      border: Border.all(
+                        color: currentImageIndex == index
+                            ? KColors.primary
+                            : KColors.grey,
+                        width: currentImageIndex == index ? 2 : 1,
+                      ),
                       padding: const EdgeInsets.all(KSizes.sm),
-                      imageUrl: KImages.productImage5),
+                      imageUrl: widget.product.images[index],
+                      isNetworkImage: true,
+                    ),
+                  ),
                 ),
               ),
             ),

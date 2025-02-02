@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/appbar/appbar.dart';
+import 'package:gear_share_project/features/shop/controllers/category_controller.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/features/shop/screens/home/home.dart';
+import 'package:gear_share_project/features/shop/services/firebase_service.dart';
 import 'package:gear_share_project/utils/constants/enums.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -59,15 +59,16 @@ class _AddScreenState extends State<AddScreen> {
     }
   }*/
 
-  final _db = FirebaseFirestore.instance;
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _priceController = TextEditingController();
-  PostCategory? _selectedCategory;
+  String? _selectedCategory;
   RentalPeriod? _selectedRentalPeriod;
   List<XFile>? _images;
   bool _isLoading = false;
+  final FirebaseService _firebaseService = FirebaseService();
+  final CategoryController _categoryController = Get.find();
 
   /// Metoda do wyboru zdjęć
   Future<void> _pickImages() async {
@@ -81,77 +82,60 @@ class _AddScreenState extends State<AddScreen> {
   Future<void> _submitForm() async {
     if (!mounted) return;
     if (_formKey.currentState!.validate()) {
-      /// Подготовка данных
-      final title = _titleController.text;
-      final description = _descriptionController.text;
-      final price = double.tryParse(_priceController.text);
-      final category = _selectedCategory;
-      final rentalPeriod = _selectedRentalPeriod;
-      final images = _images;
-
-      /// Валидация
-      if (title.isEmpty ||
-          price == null ||
-          category == null ||
-          images == null ||
-          images.isEmpty) {
+      if (_images == null || _images!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Proszę wypełnić wszystkie wymagane pola.')),
+          const SnackBar(content: Text('Please select at least one image')),
         );
         return;
       }
 
+      setState(() => _isLoading = true);
+
       try {
-        // Получаем ID пользователя
         final uid = FirebaseAuth.instance.currentUser?.uid;
-        final author = uid ?? "";
+        if (uid == null) throw 'User not authenticated';
 
-        // Устанавливаем состояние загрузки
-        setState(() => _isLoading = true);
-
-        // Загружаем все изображения и получаем их URL
-        List<String> imagesUrls = [];
-        for (var image in images) {
-          final ref =
-              FirebaseStorage.instance.ref("Images/Products").child(image.name);
-          final file = File(image.path);
-
-          // Загружаем файл
-          await ref.putFile(file);
-
-          // Получаем URL
-          final url = await ref.getDownloadURL();
-          imagesUrls.add(url);
+        // Загружаем изображения
+        List<String> imageUrls = [];
+        for (var image in _images!) {
+          final fileName =
+              '${DateTime.now().millisecondsSinceEpoch}_${image.name}';
+          debugPrint('Uploading image: $fileName');
+          final url = await _firebaseService.uploadImage(
+            File(image.path),
+            fileName,
+          );
+          imageUrls.add(url);
         }
 
-        // После загрузки всех изображений создаем продукт
-        final newProduct = ProductModel(
-            id: "",
-            title: title,
-            description: description,
-            price: price,
-            category: category.toString(),
-            rentalPeriod: rentalPeriod.toString(),
-            images: imagesUrls,
-            author: author,
-            status: "Dostępny");
+        debugPrint('All images uploaded successfully');
 
-        // Сохраняем продукт в Firestore
-        await _db.collection("Products").add(newProduct.toJson());
+        // Создаем продукт
+        final product = ProductModel(
+          id: '',
+          title: _titleController.text,
+          description: _descriptionController.text,
+          price: double.parse(_priceController.text),
+          category: _selectedCategory ?? '',
+          rentalPeriod: _selectedRentalPeriod.toString(),
+          images: imageUrls,
+          author: uid,
+          status: "Dostępny",
+          createdAt: DateTime.now(),
+        );
 
-        // Переходим на главный экран
+        debugPrint('Creating product with data: ${product.toJson()}');
+        await _firebaseService.createProduct(product);
+
         if (!mounted) return;
         setState(() => _isLoading = false);
         Get.to(() => const HomeScreen());
       } catch (e) {
-        debugPrint("Error: $e");
+        debugPrint('Error in _submitForm: $e');
         if (!mounted) return;
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Wystąpił błąd podczas dodawania produktu.'),
-          ),
+          SnackBar(content: Text('Error: $e')),
         );
       }
     }
@@ -193,15 +177,16 @@ class _AddScreenState extends State<AddScreen> {
                     const SizedBox(height: 16),
 
                     // Wybór kategorii
-                    DropdownButtonFormField<PostCategory>(
+                    DropdownButtonFormField<String>(
                       value: _selectedCategory,
                       decoration:
                           const InputDecoration(labelText: 'Kategoria *'),
-                      items: PostCategory.values.map((category) {
+                      items: _categoryController.categories
+                          .where((category) => category.isActive)
+                          .map((category) {
                         return DropdownMenuItem(
-                          value: category,
-                          child: Text(
-                              category.name), // .name odczytuje nazwę enuma
+                          value: category.id,
+                          child: Text(category.name),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -210,7 +195,7 @@ class _AddScreenState extends State<AddScreen> {
                         });
                       },
                       validator: (value) {
-                        if (value == null) {
+                        if (value == null || value.isEmpty) {
                           return 'Proszę wybrać kategorię.';
                         }
                         return null;

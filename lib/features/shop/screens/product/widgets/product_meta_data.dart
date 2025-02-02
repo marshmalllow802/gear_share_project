@@ -3,21 +3,27 @@ import 'package:gear_share_project/common/widgets/availability/product_availabil
 import 'package:gear_share_project/common/widgets/products/product_cards/product_location/product_location.dart';
 import 'package:gear_share_project/common/widgets/products/product_price/product_price.dart';
 import 'package:gear_share_project/common/widgets/texts/product_title_text.dart';
+import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/utils/constants/enums.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 
 class KProductMetaData extends StatelessWidget {
-  const KProductMetaData({super.key});
+  final ProductModel product;
+
+  const KProductMetaData({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
     final darkMode = KHelperFunctions.isDarkMode(context);
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ///Cena
-        KProductPrice(price: '45', unit: 'na tydzień', isLarge: true),
+        KProductPrice(
+            price: product.price.toString(),
+            unit: product.rentalPeriod,
+            isLarge: true),
         SizedBox(height: KSizes.spaceBtwItems / 1.5),
 
         ///Dostępność
