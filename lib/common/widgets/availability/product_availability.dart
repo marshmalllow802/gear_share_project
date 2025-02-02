@@ -8,18 +8,20 @@ import '../../../utils/constants/enums.dart';
 class KProductAvailability extends StatelessWidget {
   const KProductAvailability({
     super.key,
-    required this.isAvailable,
+    required this.status,
     this.color,
     this.maxLines = 1,
     this.textAlign = TextAlign.center,
     this.availabilityTextSize = TextSizes.small,
   });
 
-  final bool isAvailable;
+  final String status;
   final Color? color;
   final int maxLines;
   final TextAlign? textAlign;
   final TextSizes availabilityTextSize;
+
+  bool get isAvailable => status == 'Dostępny';
 
   @override
   Widget build(BuildContext context) {
