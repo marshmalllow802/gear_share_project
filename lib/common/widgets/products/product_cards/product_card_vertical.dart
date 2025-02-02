@@ -6,13 +6,13 @@ import 'package:gear_share_project/common/widgets/icons/circular_icon.dart';
 import 'package:gear_share_project/common/widgets/images/rounded_image.dart';
 import 'package:gear_share_project/common/widgets/products/product_price/product_price.dart';
 import 'package:gear_share_project/common/widgets/texts/product_title_text.dart';
+import 'package:gear_share_project/features/shop/controllers/favorites_controller.dart';
 import 'package:gear_share_project/features/shop/models/product_model.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
 import 'package:gear_share_project/utils/constants/routes.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 class KProductCardVertical extends StatelessWidget {
   final ProductModel product;
@@ -26,6 +26,7 @@ class KProductCardVertical extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = KHelperFunctions.isDarkMode(context);
     debugPrint('product.images[0]: ${product.images[0]}');
+    final controller = Get.put(FavoritesController());
     return GestureDetector(
       onTap: () => Get.toNamed(
         KRoutes.product.replaceAll(':id', product.id),
@@ -54,12 +55,26 @@ class KProductCardVertical extends StatelessWidget {
                   ),
 
                   ///Ulubione
-                  const Positioned(
+                  Positioned(
                     bottom: 0,
                     right: 0,
-                    child: KCircularIcon(
-                      icon: Iconsax.heart5,
-                      color: KColors.buttonPrimary,
+                    child: FutureBuilder<bool>(
+                      future: controller.isProductFavorite(product.id),
+                      builder: (context, snapshot) {
+                        final isFavorite = snapshot.data ?? false;
+                        return IconButton(
+                          onPressed: () =>
+                              controller.toggleFavorite(product.id),
+                          icon: KCircularIcon(
+                            icon: isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: isFavorite ? KColors.primary : null,
+                            backgroundColor:
+                                dark ? KColors.dark : KColors.white,
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
