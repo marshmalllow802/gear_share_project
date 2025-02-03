@@ -14,7 +14,8 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
       this.actions,
       this.leadingOnPressed,
       this.backgroundColor = Colors.transparent,
-      this.showBackArrowWithBackground = false});
+      this.showBackArrowWithBackground = false,
+      this.bottom});
 
   final Widget? title;
   final bool showBackArror;
@@ -23,6 +24,7 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? leadingOnPressed;
   final Color? backgroundColor;
   final bool showBackArrowWithBackground;
+  final PreferredSizeWidget? bottom;
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +50,12 @@ class KAppBar extends StatelessWidget implements PreferredSizeWidget {
             : null,
         title: title,
         actions: actions,
+        bottom: bottom,
       ),
     );
   }
 
   @override
-  // TODO: implement preferredSize
-  Size get preferredSize => Size.fromHeight(KDeviceUtilities.getAppBarHeight());
+  Size get preferredSize => Size.fromHeight(KDeviceUtilities.getAppBarHeight() +
+      (bottom?.preferredSize.height ?? 0.0));
 }

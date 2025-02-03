@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
-import 'package:gear_share_project/features/personalization/models/user_model.dart';
+import 'package:gear_share_project/features/shop/screens/product/widgets/bottom_propose_offer.dart';
 import 'package:gear_share_project/features/shop/screens/product/widgets/product_attributes.dart';
 import 'package:gear_share_project/features/shop/screens/product/widgets/product_meta_data.dart';
 import 'package:gear_share_project/features/shop/screens/product/widgets/product_name_share.dart';
-import 'package:gear_share_project/features/shop/screens/product/widgets/product_profile.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
-import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:readmore/readmore.dart';
 
+import '../../../../common/widgets/texts/product_title_text.dart';
 import '../../models/product_model.dart';
 import '../../services/firebase_service.dart';
 import 'widgets/product_detail_image_slider.dart';
@@ -17,46 +15,65 @@ import 'widgets/product_detail_image_slider.dart';
 class ProductDetail extends StatelessWidget {
   final String? id;
 
-  const ProductDetail({super.key, this.id});
+  const ProductDetail({
+    super.key,
+    required this.id,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<ProductModel?>(
-        future: id != null
-            ? Get.find<FirebaseService>().getProduct(id!)
-            : Future.value(ProductModel.empty()),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    final firebaseService = FirebaseService();
 
-          final product = snapshot.data ?? ProductModel.empty();
-          return SingleChildScrollView(
+    return FutureBuilder<ProductModel?>(
+      future: firebaseService.getProduct(id!),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (!snapshot.hasData || snapshot.data == null) {
+          return const Scaffold(
+            body: Center(child: Text('Nie znaleziono produktu')),
+          );
+        }
+
+        final product = snapshot.data!;
+
+        return Scaffold(
+          bottomNavigationBar: KBottomProposeOffer(product: product),
+          body: SingleChildScrollView(
             child: Column(
               children: [
-                /// Zdjęcia produktu
+                /// Slider zdjęć produktu
                 KProductImageSlider(product: product),
 
+                /// Szczegóły produktu
                 Padding(
                   padding: const EdgeInsets.only(
-                      right: KSizes.defaultSpace,
-                      left: KSizes.defaultSpace,
-                      bottom: KSizes.defaultSpace),
+                    right: KSizes.defaultSpace,
+                    left: KSizes.defaultSpace,
+                    bottom: KSizes.defaultSpace,
+                  ),
                   child: Column(
                     children: [
-                      ///Nazwa produktu i udostępnij
+                      /// -- Name & share button
                       KProductNameAndShare(product: product),
 
-                      ///cena, status, lokalizacja
+                      /// Tytuł i cena
+                      KProductTitleText(title: product.title),
+                      const SizedBox(height: KSizes.spaceBtwItems),
+
+                      /// Metadane produktu
                       KProductMetaData(product: product),
                       const SizedBox(height: KSizes.spaceBtwSections),
 
-                      /// atrybuty wariacje
+                      /// Atrybuty
                       KProductAttributes(product: product),
                       const SizedBox(height: KSizes.spaceBtwSections),
 
-                      ///opis
+                      /// Opis
                       const KSectionHeading(title: 'Opis produktu'),
                       const SizedBox(height: KSizes.spaceBtwItems),
                       ReadMoreText(
@@ -66,56 +83,22 @@ class ProductDetail extends StatelessWidget {
                         trimCollapsedText: 'Więcej',
                         trimExpandedText: 'Mniej',
                         moreStyle: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w800),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
                         lessStyle: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w800),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                        ),
                       ),
-
-                      ///opinie
                     ],
                   ),
                 ),
-
-                FutureBuilder<UserModel?>(
-                  future: Get.find<FirebaseService>().getUser(product.author),
-                  builder: (context, userSnapshot) {
-                    final username =
-                        userSnapshot.data?.username ?? 'Unknown User';
-                    return KProductProfile(
-                      username: username,
-                      rating: 5.0,
-                      numberOfRatings: 186,
-                      itemsLent: 33,
-                      itemsBorrowed: 29,
-                      itemsCanceled: 0,
-                    );
-                  },
-                ),
-                const SizedBox(height: KSizes.spaceBtwItems),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      right: KSizes.defaultSpace,
-                      left: KSizes.defaultSpace,
-                      bottom: KSizes.defaultSpace),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      KSectionHeading(title: 'Opinie (186)', onPressed: () {}),
-                      IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Iconsax.arrow_right_3,
-                            size: 18,
-                          ))
-                    ],
-                  ),
-                ),
-                const SizedBox(height: KSizes.spaceBtwSections),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

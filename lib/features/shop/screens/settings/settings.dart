@@ -7,12 +7,14 @@ import 'package:gear_share_project/common/widgets/texts/section_heading.dart';
 import 'package:gear_share_project/features/authentication/screens/login/login.dart';
 import 'package:gear_share_project/features/shop/screens/my_products/my_products.dart';
 import 'package:gear_share_project/features/shop/screens/profile/profile.dart';
+import 'package:gear_share_project/features/shop/screens/rented_products/rented_products_screen.dart';
 import 'package:gear_share_project/utils/constants/colors.dart';
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../favorites/favorites.dart';
+import '../wallet/wallet_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -66,8 +68,8 @@ class SettingsScreen extends StatelessWidget {
                   KProfileMenuTile(
                     icon: Iconsax.wallet,
                     title: 'Twój portfel',
-                    subTitle: 'Przeglądaj listę polubionych ogłoszeń',
-                    onTap: () {},
+                    subTitle: 'Zarządzaj swoimi środkami',
+                    onTap: () => Get.to(() => const WalletScreen()),
                   ),
                   KProfileMenuTile(
                     icon: Iconsax.book,
@@ -79,7 +81,7 @@ class SettingsScreen extends StatelessWidget {
                     icon: Iconsax.bag_tick,
                     title: 'Wypożyczone',
                     subTitle: 'Przeglądaj listę polubionych ogłoszeń',
-                    onTap: () {},
+                    onTap: () => Get.to(() => const RentedProductsScreen()),
                   ),
                   KProfileMenuTile(
                     icon: Iconsax.bag_tick,
