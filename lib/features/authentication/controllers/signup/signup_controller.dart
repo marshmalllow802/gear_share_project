@@ -6,6 +6,9 @@ import 'package:gear_share_project/features/authentication/screens/signup/verify
 import 'package:gear_share_project/features/personalization/models/user_model.dart';
 import 'package:get/get.dart';
 
+import '../../../../utils/constants/image_strings.dart';
+import '../../../../utils/popups/full_screen_loader.dart';
+
 class SignupController extends GetxController {
   static SignupController get instance => Get.find();
 
@@ -23,15 +26,15 @@ class SignupController extends GetxController {
   /// Rejestracja
   void signup() async {
     // Zacznij wczytywanie
-    /*KFullScreenLoader.openLoadingDialog(
-        'Analizujemy przeslana informacje...', KImages.loader);*/
+    KFullScreenLoader.openLoadingDialog(
+        'Analizujemy przeslana informacje...', KImages.loader);
 
     // Sprawdz polaczenie internetowe(pozniej)
 
     // Walidacja formatki rejestracyjnej
     if (!signupFormKey.currentState!.validate()) {
       // Usun loader
-      /*  KFullScreenLoader.stopLoading();*/
+      KFullScreenLoader.stopLoading();
       return;
     }
 
@@ -64,7 +67,7 @@ class SignupController extends GetxController {
     await userRepository.saveUserRecord(newUser);
 
     // Usun loader
-    /*KFullScreenLoader.stopLoading();*/
+    KFullScreenLoader.stopLoading();
 
     // Pokaz wiadomosc sukcesu
 

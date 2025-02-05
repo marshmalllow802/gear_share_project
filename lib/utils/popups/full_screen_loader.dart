@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gear_share_project/utils/constants/colors.dart';
-import 'package:gear_share_project/utils/helpers/helper_functions.dart';
 import 'package:get/get.dart';
 
 import '../../common/widgets/loaders/animation_loader.dart';
@@ -10,13 +8,12 @@ class KFullScreenLoader {
     showDialog(
       context: Get.overlayContext!,
       barrierDismissible: false,
+      barrierColor: Colors.black45,
       builder: (_) => PopScope(
         canPop: false,
-        child: Scaffold(
-          backgroundColor: KHelperFunctions.isDarkMode(Get.context!)
-              ? KColors.dark
-              : KColors.white,
-          body: Center(
+        child: Container(
+          color: Colors.transparent,
+          child: Center(
             child: KAnimationLoaderWidget(text: text, animation: animation),
           ),
         ),
@@ -25,6 +22,8 @@ class KFullScreenLoader {
   }
 
   static stopLoading() {
-    Navigator.of(Get.overlayContext!).pop();
+    if (Get.isDialogOpen == true) {
+      Navigator.of(Get.overlayContext!).pop();
+    }
   }
 }

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gear_share_project/utils/constants/colors.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../../utils/constants/sizes.dart';
 
 class KAnimationLoaderWidget extends StatelessWidget {
-  const KAnimationLoaderWidget(
-      {super.key,
-      required this.text,
-      required this.animation,
-      this.showAction = false,
-      this.actionText,
-      this.onActionPressed});
+  const KAnimationLoaderWidget({
+    super.key,
+    required this.text,
+    required this.animation,
+    this.showAction = false,
+    this.actionText,
+    this.onActionPressed,
+  });
 
   final String text;
   final String animation;
@@ -21,37 +20,38 @@ class KAnimationLoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Lottie.asset(animation,
-              width: MediaQuery.of(context).size.width * 0.8),
-          const SizedBox(height: KSizes.defaultSpace),
-          Text(
-            text,
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: KSizes.defaultSpace),
-          showAction
-              ? SizedBox(
-                  width: 250,
-                  child: OutlinedButton(
-                    onPressed: onActionPressed,
-                    style:
-                        OutlinedButton.styleFrom(backgroundColor: KColors.dark),
-                    child: Text(
-                      actionText!,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium!
-                          .apply(color: KColors.light),
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.black.withOpacity(0.8),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              animation,
+              height: 150,
+              width: 150,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(height: KSizes.defaultSpace),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                )
-              : const SizedBox(),
-        ],
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
