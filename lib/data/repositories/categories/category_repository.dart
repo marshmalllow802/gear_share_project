@@ -11,7 +11,7 @@ class CategoryRepository extends GetxController {
   ///Variables
   final _db = FirebaseFirestore.instance;
 
-  /// Get all categories from Firestore
+  /// Otrzymanie wszytskich kategorii Firestore
   Future<List<CategoryModel>> getAllCategories() async {
     try {
       final snapshot = await _db.collection('Categories').get();
@@ -25,7 +25,7 @@ class CategoryRepository extends GetxController {
     }
   }
 
-  /// Upload categories to Firestore
+  /// Przesyłanie kategorii do Firestore
   Future<void> uploadDummyData(List<CategoryModel> categories) async {
     final storage = Get.put(KFirebaseStorageService());
 

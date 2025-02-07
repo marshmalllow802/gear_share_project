@@ -7,7 +7,6 @@ import 'package:gear_share_project/features/shop/screens/product/widgets/product
 import 'package:gear_share_project/utils/constants/sizes.dart';
 import 'package:readmore/readmore.dart';
 
-import '../../../../common/widgets/texts/product_title_text.dart';
 import '../../models/product_model.dart';
 import '../../services/firebase_service.dart';
 import 'widgets/product_detail_image_slider.dart';
@@ -62,8 +61,8 @@ class ProductDetail extends StatelessWidget {
                       KProductNameAndShare(product: product),
 
                       /// Tytuł i cena
-                      KProductTitleText(title: product.title),
-                      const SizedBox(height: KSizes.spaceBtwItems),
+                      /*KProductTitleText(title: product.title),
+                      const SizedBox(height: KSizes.spaceBtwItems),*/
 
                       /// Metadane produktu
                       KProductMetaData(product: product),

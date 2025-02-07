@@ -18,7 +18,7 @@ class CategoryController extends GetxController {
     fetchCategories();
   }
 
-  /// Load categories from Firestore
+  /// Załadowanie kategorii z Firestore
   Future<void> fetchCategories() async {
     isLoading.value = true;
     try {
@@ -42,7 +42,7 @@ class CategoryController extends GetxController {
     }
   }
 
-  /// Upload initial categories if collection is empty
+  /// Prześlij kategorie początkowe jeśli kolekcja jest pusta
   Future<void> uploadDummyCategoriesIfNeeded() async {
     try {
       final categoriesRef = _db.collection('Categories');
@@ -92,7 +92,7 @@ class CategoryController extends GetxController {
     }
   }
 
-  /// Migrate old category format to new one
+  /// Migracja starego formatu kategorii do nowego
   Future<void> migrateCategories() async {
     try {
       debugPrint('Starting categories migration...');

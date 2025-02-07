@@ -11,24 +11,6 @@ class LoginController extends GetxController {
   final password = TextEditingController();
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
-  /*Future<void> emailAndPasswordSignIn() async {
-
-    if (!loginFormKey.currentState!.validate()) {
-      return;
-    }
-
-    if (rememberMe.value) {
-      localStorage.write('REMEMBER_ME_EMAIL', email.text.trim());
-      localStorage.write('REMEMBER_ME_PASSWORD', password.text.trim());
-    }
-
-      final userCredentials = await AuthenticationRepository.instance
-          .loginWithEmailAndPassword(email.text.trim(), password.text.trim());
-      debugPrint("userCredentials: $userCredentials");
-
-      AuthenticationRepository.instance.screenRedirect();
-
-  }*/
   void login() async {
     if (!loginFormKey.currentState!.validate()) {
       return;

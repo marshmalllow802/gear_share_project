@@ -29,8 +29,6 @@ class SignupController extends GetxController {
     KFullScreenLoader.openLoadingDialog(
         'Analizujemy przeslana informacje...', KImages.loader);
 
-    // Sprawdz polaczenie internetowe(pozniej)
-
     // Walidacja formatki rejestracyjnej
     if (!signupFormKey.currentState!.validate()) {
       // Usun loader

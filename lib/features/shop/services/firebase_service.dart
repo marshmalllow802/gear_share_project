@@ -33,11 +33,11 @@ class FirebaseService {
         return [];
       }
 
-      // Получаем все документы без сортировки
+      // Otrzymanie wszystkich dokumentów bez sortowania
       final snapshot = await collectionRef.get();
       debugPrint('Got ${snapshot.docs.length} products');
 
-      // Выводим данные первого документа для проверки
+      // Pokazujemy dane pierwszego dokumetu w celach sprawdzenia
       if (snapshot.docs.isNotEmpty) {
         final firstDoc = snapshot.docs.first;
         debugPrint('First document ID: ${firstDoc.id}');
@@ -60,7 +60,7 @@ class FirebaseService {
           .cast<ProductModel>()
           .toList();
 
-      // Сортируем на стороне клиента
+      // Sortujemy po stronie klienta
       products.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       debugPrint('Successfully processed ${products.length} products');
@@ -96,21 +96,21 @@ class FirebaseService {
       debugPrint('Attempting to create/update product...');
       debugPrint('Product data: ${product.toJson()}');
 
-      // Создаем новый документ
+      // Tworzymy nowy dokument
       final docRef = _db.collection(collectionPath).doc();
       final newId = docRef.id;
       debugPrint('Generated new document ID: $newId');
 
-      // Создаем продукт с ID
+      // Tworzymy produkt z id
       final productWithId = product.copyWith(id: newId);
       final json = productWithId.toJson();
       debugPrint('Final product data: $json');
 
-      // Сохраняем документ
+      // Zapisujemy dokument
       await docRef.set(json);
       debugPrint('Product created successfully with ID: $newId');
 
-      // Проверяем, что документ создался
+      // Sprawdzamy czy dokument się stworzył
       final savedDoc = await docRef.get();
       if (savedDoc.exists) {
         debugPrint('Document verified in database');
@@ -151,21 +151,21 @@ class FirebaseService {
         bool needsUpdate = false;
         Map<String, dynamic> updateData = {};
 
-        // Проверяем id
+        // Sprawdzamyid
         if (data['id'] == null || data['id'] == '') {
           debugPrint('Product ${doc.id} needs id update');
           updateData['id'] = doc.id;
           needsUpdate = true;
         }
 
-        // Проверяем createdAt
+        // Sprawdzamy createdAt
         if (data['createdAt'] == null) {
           debugPrint('Product ${doc.id} needs createdAt update');
           updateData['createdAt'] = DateTime.now().toIso8601String();
           needsUpdate = true;
         }
 
-        // Если нужно обновление, делаем его
+        // Jesli potrzebna aktualizacja to ją robimy
         if (needsUpdate) {
           debugPrint('Migrating product ${doc.id} with data: $updateData');
           await _db.collection(collectionPath).doc(doc.id).update(updateData);
@@ -229,7 +229,7 @@ class FirebaseService {
       final products =
           snapshot.docs.map((doc) => ProductModel.fromSnapshot(doc)).toList();
 
-      // Сортируем по дате создания
+      // Sortujemy po dacie stworzenia
       products.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
       return products;

@@ -52,12 +52,15 @@ class KBottomProposeOffer extends StatelessWidget {
             color: KColors.white,
             onPressed: () {},
           ),
+          SizedBox(
+            width: KSizes.spaceBtwItems / 2,
+          ),
 
           // Przycisk Wypożycz
           Expanded(
             child: ElevatedButton(
               onPressed: product.status != 'Dostępny'
-                  ? null // Dezaktywuj przycisk jeśli produkt nie jest dostępny
+                  ? null
                   : () {
                       Get.dialog(
                         AlertDialog(
@@ -84,35 +87,42 @@ class KBottomProposeOffer extends StatelessWidget {
                             ],
                           ),
                           actions: [
-                            TextButton(
-                              onPressed: () => Get.back(),
-                              child: const Text('Anuluj'),
-                            ),
-                            ElevatedButton(
-                              onPressed: () async {
-                                final success =
-                                    await walletController.processRental(
-                                  product.author,
-                                  product.price,
-                                  product.id,
-                                );
+                            Row(
+                              children: [
+                                TextButton(
+                                  onPressed: () => Get.back(),
+                                  child: const Text('Anuluj'),
+                                ),
+                                SizedBox(width: KSizes.spaceBtwItems / 2),
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final success =
+                                        await walletController.processRental(
+                                      product.author,
+                                      product.price,
+                                      product.id,
+                                    );
 
-                                if (success) {
-                                  Get.back();
-                                  await rentedProductsController
-                                      .getRentedProducts();
-                                  KLoaders.successSnackBar(
-                                    title: 'Sukces',
-                                    message:
-                                        'Produkt został wypożyczony. Szczegóły otrzymasz SMS-em.',
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: KColors.primary,
-                              ),
-                              child: const Text('Potwierdź wypożyczenie'),
+                                    if (success) {
+                                      Get.back();
+                                      await rentedProductsController
+                                          .getRentedProducts();
+                                      KLoaders.successSnackBar(
+                                        title: 'Sukces',
+                                        message:
+                                            'Produkt został wypożyczony. Szczegóły otrzymasz SMS-em.',
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.all(KSizes.md),
+                                    backgroundColor: KColors.primary,
+                                  ),
+                                  child: const Text('Potwierdź'),
+                                ),
+                              ],
                             ),
+
                           ],
                         ),
                       );

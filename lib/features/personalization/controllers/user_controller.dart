@@ -54,7 +54,7 @@ class UserController extends GetxController {
   void deleteAccountWarningPopup() {
     Get.defaultDialog(
         contentPadding: const EdgeInsets.all(KSizes.md),
-        title: 'Delete Account',
+        title: 'Usunięcie konta',
         middleText:
             'Czy jesteś pewny, że chcesz usunąć konto? To jest nieodwracalne i wszystkie twoje dane zostaną usunięte.',
         confirm: ElevatedButton(

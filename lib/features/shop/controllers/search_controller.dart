@@ -19,7 +19,7 @@ class ProductSearchController extends GetxController {
   Future<void> searchProducts(String query) async {
     try {
       isLoading.value = true;
-      currentSearchQuery.value = query; // zapisz query
+      currentSearchQuery.value = query;
 
       final products = await firebaseService.getAllProducts();
 
@@ -29,7 +29,7 @@ class ProductSearchController extends GetxController {
       }).toList();
 
       searchResults.assignAll(filtered);
-      allSearchResults.assignAll(filtered); // zachowaj kopię wszystkich wyników
+      allSearchResults.assignAll(filtered);
     } catch (e) {
       print('Error searching products: $e');
     } finally {

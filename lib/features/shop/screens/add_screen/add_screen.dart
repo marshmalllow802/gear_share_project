@@ -19,45 +19,6 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
-/*  Future<String> uploadImage(String path, XFile image) async {
-    try {
-      // Logujemy wybraną ścieżkę do zdjęcia
-      print("Przesyłanie zdjęcia do Firebase Storage: ${image.path}");
-
-      // Tworzymy referencję do miejsca w Firebase Storage
-      final ref = FirebaseStorage.instance.ref(path).child(image.name);
-      final file = File(image.path);
-
-      // Sprawdzamy, czy plik istnieje w systemie
-      if (await file.exists()) {
-        print("Plik istnieje, przesyłanie...");
-      } else {
-        print("Plik nie istnieje! Ścieżka: ${image.path}");
-        return ''; // Jeśli plik nie istnieje, zwróć pusty string
-      }
-
-      // Przesyłanie zdjęcia do Firebase Storage
-      final uploadTask = ref.putFile(file);
-      uploadTask.snapshotEvents.listen((event) {
-        print(
-            "Przesyłanie: ${event.bytesTransferred} / ${event.totalBytes} bytes");
-      });
-
-      // Czekamy, aż operacja zakończy się sukcesem
-      await uploadTask.whenComplete(() async {
-        print("Zdjęcie zostało przesłane do Firebase Storage.");
-      });
-
-      // Uzyskiwanie URL po zakończeniu przesyłania
-      final url = await ref.getDownloadURL();
-      print("URL zdjęcia z Firebase Storage: $url");
-
-      return url; // Zwracamy URL zdjęcia
-    } on FirebaseException catch (e) {
-      print("Błąd podczas przesyłania zdjęcia: $e");
-      throw 'Coś poszło nie tak z przesyłaniem zdjęcia. Spróbuj ponownie.';
-    }
-  }*/
 
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
@@ -84,7 +45,8 @@ class _AddScreenState extends State<AddScreen> {
     if (_formKey.currentState!.validate()) {
       if (_images == null || _images!.isEmpty) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select at least one image')),
+          const SnackBar(
+              content: Text('Proszę wybrać conajmniej jedno zdjęcie')),
         );
         return;
       }
@@ -95,7 +57,7 @@ class _AddScreenState extends State<AddScreen> {
         final uid = FirebaseAuth.instance.currentUser?.uid;
         if (uid == null) throw 'User not authenticated';
 
-        // Загружаем изображения
+        // Pobieramy zdjęcia
         List<String> imageUrls = [];
         for (var image in _images!) {
           final fileName =
@@ -110,7 +72,7 @@ class _AddScreenState extends State<AddScreen> {
 
         debugPrint('All images uploaded successfully');
 
-        // Создаем продукт
+        // Tworzymy produkt
         final product = ProductModel(
           id: '',
           title: _titleController.text,

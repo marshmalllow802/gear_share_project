@@ -99,7 +99,7 @@ class WalletController extends GetxController {
         return false;
       }
 
-      // Upewnij się, że portfele istnieją przed transakcją
+      // Upewnienie się, że portfele istnieją przed transakcją
       final ownerWallet = await _db.collection('Wallets').doc(ownerId).get();
       if (!ownerWallet.exists) {
         await _db.collection('Wallets').doc(ownerId).set({
